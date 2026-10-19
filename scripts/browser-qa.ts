@@ -27,6 +27,9 @@ try{
   await page.getByRole('navigation',{name:'移动端导航'}).getByRole('link',{name:'使用教程'}).click();
   if(!page.url().endsWith('/guides/'))errors.push('移动导航跳转失败');else checks.push('移动导航可展开并完成跳转');
   await page.goto(base);const faq=page.locator('.faq-list details').first();await faq.locator('summary').click();if(!await faq.getAttribute('open')&&await faq.getAttribute('open')!== '')errors.push('FAQ 未展开');else checks.push('FAQ 原生展开');
+  await page.goto(base+'/airport/invisible/');await page.getByRole('navigation',{name:'本文目录'}).getByRole('link',{name:'预算与流量',exact:true}).click();if(!page.url().endsWith('#analysis')||await page.locator('#analysis').evaluate(e=>e.getBoundingClientRect().top)<65)errors.push('品牌正文目录锚点或顶部遮挡异常');
+  await page.locator('.profile-faq summary').first().click();if(await page.locator('.profile-faq details').first().getAttribute('open')===null)errors.push('品牌常见问题未展开');
+  await page.getByRole('link',{name:'与相关品牌对比',exact:true}).click();if(await page.locator('#compare-chips button').count()!==2)errors.push('品牌详情双候选对比失败');else checks.push('新品牌详情：正文目录、FAQ 与相近方案双候选对比');
   await page.goto(base+'/search/');await page.getByLabel('搜索内容',{exact:true}).fill('Windows');if(await page.locator('.search-list li:visible').count()!==1)errors.push('搜索 Windows 筛选数量异常');
   await page.getByLabel('搜索内容',{exact:true}).fill('no-such-text-qa');if(await page.locator('.search-list li:visible').count()!==0)errors.push('搜索空状态异常');
   await page.getByLabel('搜索内容',{exact:true}).fill('');if(await page.locator('.search-list li:visible').count()!==45)errors.push('搜索清空后恢复异常');else checks.push('45 条文章、品牌与优惠码搜索筛选');
@@ -54,6 +57,9 @@ try{
   await page.setViewportSize({width:1440,height:1000});await page.goto(base);await page.screenshot({path:'docs/qa/screenshots/home-desktop.png',fullPage:true});
   await page.setViewportSize({width:390,height:844});await page.goto(base);await page.screenshot({path:'docs/qa/screenshots/home-mobile.png',fullPage:true});
   await page.goto(base+'/blog/cost-per-gb/');await page.screenshot({path:'docs/qa/screenshots/article-mobile.png',fullPage:true});
+  await page.goto(base+'/airport/invisible/');await page.screenshot({path:'docs/qa/screenshots/brand-editorial-mobile.png',fullPage:true});
+  await page.setViewportSize({width:1440,height:1080});await page.goto(base+'/airport/invisible/');await page.screenshot({path:'docs/qa/screenshots/brand-editorial-desktop.png'});
+  await page.locator('#verdict').scrollIntoViewIfNeeded();await page.screenshot({path:'docs/qa/screenshots/brand-editorial-reading.png'});
 }catch(e){errors.push(String(e));}finally{await browser.close();}
 errors.push(...consoleErrors.map(e=>'浏览器脚本错误：'+e));
 await result('browser',errors,{checks,viewports:[320,390,768,1440],browser:'Installed Google Chrome, Playwright headless',scope:'本地生产构建全部页面；29 个真实录入品牌；计算和四家上限另用隔离响应夹具'});

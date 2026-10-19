@@ -29,7 +29,7 @@ const structured: Record<string,unknown>[] = [
 <div class="anime-scenery" aria-hidden="true"><div class="scenery-sky"><div class="scenery-sky-art"></div></div><span class="scenery-cloud one"></span><span class="scenery-cloud two"></span><span class="scenery-cloud three"></span></div>
 <a class="skip-link" href="#main">跳到正文</a>
 <header class="site-header"><div class="container header-inner">
-<a class="logo" href="/" aria-label="三毛导航 SANMAO JOURNAL 首页"><span class="logo-mark" aria-hidden="true">三<span>↗</span></span><span>三毛导航<small>SANMAO JOURNAL</small></span></a>
+<a class="logo" href="/"><span class="logo-mark" aria-hidden="true">三<span>↗</span></span><span>三毛导航<small>SANMAO JOURNAL</small></span></a>
 <nav class="desktop-nav" aria-label="主导航">{navigation.map(([href,label])=><a href={href} aria-current={href==='/'?Astro.url.pathname==='/'?'page':undefined:Astro.url.pathname.startsWith(href)?'page':undefined}>{label}</a>)}</nav>
 <div class="header-actions"><button id="scenery-motion-toggle" class="scenery-motion-toggle" type="button" aria-label="暂停云朵飘动" title="暂停云朵飘动" aria-pressed="false"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16a4 4 0 0 1-1-7.9A6 6 0 0 1 16.5 7a4.5 4.5 0 0 1 1 9H6Zm0 4h5m4 0h3"/></svg></button><a class="search-trigger" href="/search/" aria-label="搜索站内内容"><Icon name="search"/></a><details class="mobile-menu"><summary aria-label="展开导航"><Icon name="menu"/></summary><nav aria-label="移动端导航">{navigation.map(([href,label])=><a href={href}>{label}</a>)}</nav></details></div>
 </div></header>

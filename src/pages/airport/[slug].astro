@@ -2,20 +2,60 @@
 import Base from '../../layouts/Base.astro';
 import Coupon from '../../components/Coupon.astro';
 import { airports } from '../../data/airports';
-import { displayPrice, displayTraffic, displayRoute, displayProtocols, evidenceLabel, unknown } from '../../lib/airports';
+import { getBrandEditorial } from '../../data/brand-editorials';
+import { SITE } from '../../data/site';
+import { displayPrice, displayTraffic, displayRoute, displayProtocols } from '../../lib/airports';
+import '../../styles/brand-editorial.css';
+
 export function getStaticPaths(){return airports.map(airport=>({params:{slug:airport.slug},props:{airport}}));}
 const {airport:a}=Astro.props;
-const related=airports.filter(b=>b.id!==a.id&&b.categories.some(c=>a.categories.includes(c))).slice(0,4);
+const e=getBrandEditorial(a.id);
+const updated='2026-10-19';
+const related=e.alternatives.map(item=>({brand:airports.find(b=>b.id===item.id)!,reason:item.reason}));
+const compareUrl=`/compare/?brands=${[a.id,...related.slice(0,1).map(item=>item.brand.id)].join(',')}`;
+const payment=a.referenceOffer?.priceKind==='annual-equivalent'?'年付折算月均，先确认实际年费':a.referenceOffer?.priceKind==='yearly'?'按年起价，先确认年度订单':a.referenceOffer?'月度起价，需核对具体付款档位':'待取得套餐原文';
+const readingMinutes=Math.max(3,Math.ceil(JSON.stringify(e).length/650));
+const protocolLinks=[];
+if(a.referenceOffer?.protocolText.includes('VLESS'))protocolLinks.push({name:'Project X：VLESS 配置说明',url:'https://xtls.github.io/config/outbounds/vless.html'});
+if(/Shadowsocks|\bSS\b/.test(a.referenceOffer?.protocolText||''))protocolLinks.push({name:'sing-box：Shadowsocks 配置说明',url:'https://sing-box.sagernet.org/configuration/outbound/shadowsocks/'});
+const faqs=[...e.faq,...a.coupon?[{question:`${a.name}优惠码是什么，怎样确认生效？`,answer:`维护者提供的优惠码是 ${a.coupon.code}。在所选套餐结算页按原样输入，确认优惠已经显示并核对实际应付金额。优惠幅度、期限与续费适用性尚未核实。`}]:[],{question:`本文是否包含${a.name}的速度与解锁实测？`,answer:'本文是基于已收录参数的选购分析，没有本站测速、稳定性或应用解锁记录。若某项应用是购买前提，应使用自己的设备、网络与账号完成相应任务验证。'}];
+const schema=[{'@context':'https://schema.org','@type':'Article',headline:e.headline,description:e.standfirst,datePublished:a.referenceOffer?.collectedAt||SITE.published,dateModified:updated,inLanguage:'zh-CN',author:{'@type':'Organization',name:SITE.name,url:SITE.domain},publisher:{'@id':`${SITE.domain}/#organization`},mainEntityOfPage:`${SITE.domain}/airport/${a.slug}/`,image:`${SITE.domain}/social.png`}];
 ---
-<Base title={`${a.name}价格、流量与优惠码｜三毛导航`} description={a.description} noindex={!a.referenceOffer&&a.testStatus==='unverified'} crumbs={[{name:'品牌资料库',url:'/airport/'},{name:a.name,url:`/airport/${a.slug}/`}]}>
-<div class="container"><header class="page-intro"><span class="eyebrow">BRAND PROFILE / {a.slug}</span><h1>{a.name}价格、流量与优惠码</h1><p>{a.description}</p><span class="pill">{evidenceLabel(a)}</span></header><div class="page-body brand-profile-grid"><article class="brand-profile-main prose">
-<h2>价格与流量摘要</h2><div class="reference-disclosure">{a.referenceOffer?<>下列参数引用第三方参考站，采集于 <time datetime={a.referenceOffer.collectedAt}>{a.referenceOffer.collectedAt}</time>。这不是官网已核实报价，也不是本站实测。价格与流量保留参考站原文，当前售卖条件以服务商下单页为准。</>:<>用户已提供品牌与推广入口，参考站没有找到对应品牌。价格、流量和套餐资料尚未核实。</>}</div>
-<dl class="reference-facts"><dt>参考起价</dt><dd>{displayPrice(a)}</dd><dt>参考流量</dt><dd>{displayTraffic(a)}</dd><dt>参考线路</dt><dd>{displayRoute(a)}</dd><dt>参考协议</dt><dd>{displayProtocols(a)}</dd><dt>设备限制</dt><dd>{a.deviceLimit||unknown}</dd><dt>节点地区</dt><dd>{a.regions.join('、')||unknown}</dd><dt>资料来源</dt><dd>{a.referenceOffer?<a href={a.referenceOffer.source} target="_blank" rel="noopener noreferrer">参考站品牌页 ↗</a>:'等待补充来源'}</dd></dl>
-<ul>{a.editorialNotes?.map(note=><li>{note}</li>)}</ul>
-<h2>套餐档位与付款周期</h2><p>目前收录的是起步价格与基础流量摘要。参考站没有公开完整套餐档位，本站暂未取得可核对的全量套餐表，因此不补写其他价格、年付总额或流量档位。</p><p>“年付折算”表示按年付金额换算的月均费用，实际支付周期需在下单前确认。参考流量若只写 GB 而没有周期，不将其视为每月重置；“多种套餐”“按套餐而定”等说明也不能用来计算每 GB 成本。</p>
-<h2>{a.name}优惠码</h2>{a.coupon?<><Coupon code={a.coupon.code} name={a.name}/><p>由站点维护者提供于 {a.coupon.providedAt}。请按原样输入，保留大小写。优惠比例、适用套餐、有效期、新老用户条件与当前是否可用尚未核实；以下单页实际结果为准。</p></>:<p>当前暂未提供该品牌优惠码。可以通过下方推广入口查看服务商当期信息。</p>}<p>推广链接中的邀请参数与结算时输入的优惠码属于不同字段。通过邀请入口注册后，如需优惠，仍应在结算页面核对优惠码是否生效。</p>
-<h2>购买前核对</h2><ol><li>打开服务商页面，确认品牌名称、套餐价格与实际付款周期。</li><li>核对流量单位、重置周期、节点倍率及设备限制，保存当期条款。</li><li>输入优惠码后检查最终应付金额，确认适用范围与退款规则。</li><li>先用短期方案验证自己的网络与设备，避免仅根据摘要长期预付。</li></ol><p>AI、流媒体支持与实际速度：{unknown}。参考线路和协议属于来源中的描述，不构成本站的性能承诺，也不会直接转换为稳定性排名。</p>
-<div class="profile-links"><a href={`/compare/?brands=${a.id}`}>加入横向对比 →</a><a href="/blog/cost-per-gb/">流量成本怎么算 →</a><a href="/blog/trial-checklist/">试用检查清单 →</a></div>
-<h2>来源与商业关系</h2><p>品牌名称、推广入口及优惠码由站点维护者提供。参考参数来自下列链接，采集日期不等于官方核验日期；目前没有本站实测记录。</p><ul>{a.sources.length?a.sources.map(s=><li><a href={s} target="_blank" rel="noopener noreferrer">{s}</a></li>):<li>暂无可核对的套餐来源。</li>}</ul><p>本页含推广链接，通过链接注册或购买可能产生佣金。商业关系不决定排名。资料有误可通过<a href="/contact/">联系与纠错</a>反馈。</p>
-{related.length>0&&<><h2>继续比较其他品牌</h2><p>以下仅按参考资料分类关联，展示顺序不表示推荐名次。</p><ul>{related.map(b=><li><a href={`/airport/${b.slug}/`}>{b.name}价格与流量资料</a></li>)}</ul></>}
-</article><aside class="brand-purchase-box"><span class="eyebrow">QUICK REFERENCE</span><h2>{a.name}</h2><p class="brand-price">{displayPrice(a)}</p><p>参考流量：{displayTraffic(a)}</p>{a.coupon&&<Coupon code={a.coupon.code} name={a.name}/>}<p class="brand-source-note">{a.referenceOffer?`第三方资料 · 采集 ${a.referenceOffer.collectedAt}`:'价格与流量尚未核实'}</p>{a.affiliateUrl&&<a class="button" href={a.affiliateUrl} rel="sponsored noopener noreferrer" target="_blank">访问品牌（推广）↗</a>}<p class="brand-source-note">请在服务商页面确认实际价格与优惠条件。</p><a class="text-link" href="/coupons/">查看全部优惠码 →</a></aside></div></div></Base>
+<Base title={`${e.headline}｜三毛导航`} description={e.standfirst} noindex={!a.referenceOffer&&a.testStatus==='unverified'} type="article" schema={schema} crumbs={[{name:'品牌资料库',url:'/airport/'},{name:a.name,url:`/airport/${a.slug}/`}]}>
+<div class="container brand-feature">
+  <header class="page-intro brand-feature-intro">
+    <div class="brand-feature-kicker"><span class="eyebrow">THE BRAND JOURNAL</span><span class="profile-angle">{e.angle}</span></div>
+    <h1>{e.headline}</h1>
+    <p class="brand-standfirst">{e.standfirst}</p>
+    <div class="brand-byline"><span>三毛导航 · 编辑分析</span><span>更新 <time datetime={updated}>{updated}</time></span><span>约 {readingMinutes} 分钟阅读</span><a href="#sources">资料来源与范围 ↗</a></div>
+    <dl class="profile-keyfacts"><div><dt>参考起价</dt><dd>{displayPrice(a)}</dd></div><div><dt>参考流量</dt><dd>{displayTraffic(a)}</dd></div><div><dt>付款提示</dt><dd class="payment-hint">{payment}</dd></div></dl>
+    <p class="profile-evidence-line">{a.referenceOffer?`参数引自第三方参考资料，采集于 ${a.referenceOffer.collectedAt}；正文为编辑分析，当前售卖条件以服务商页面为准。`:'当前保留维护者提供的品牌入口，尚未取得可引用的套餐原文。'}</p>
+    <div class="profile-hero-actions">{a.affiliateUrl&&<a class="button" href={a.affiliateUrl} target="_blank" rel="sponsored noopener noreferrer">访问品牌（推广）↗</a>}<a class="button secondary" href={compareUrl}>与相关品牌对比</a></div>
+  </header>
+
+  <div class="page-body brand-profile-grid brand-editorial-grid">
+    <article class="brand-profile-main prose brand-editorial-content">
+      <section class="editor-verdict" id="verdict" aria-labelledby="verdict-title"><span class="eyebrow">EDITOR'S TAKE</span><h2 id="verdict-title">先看编辑结论</h2><p>{e.verdict}</p><ul>{e.highlights.map(point=><li>{point}</li>)}</ul></section>
+      <nav class="profile-contents" aria-label="本文目录"><span>阅读目录</span><a href="#overview">品牌与参数</a><a href="#analysis">预算与流量</a><a href="#connection">线路与客户端</a><a href="#fit">选购建议</a><a href="#coupon">优惠与入口</a><a href="#faq">常见问题</a><a href="#alternatives">相关比较</a></nav>
+
+      <section id="overview"><span class="profile-section-number">01 / BRAND OVERVIEW</span><h2>怎样理解{a.name}的产品信息</h2><p>{e.intro}</p><div class="profile-fact-panel"><h3>已收录的套餐参考摘要</h3><dl class="reference-facts"><dt>参考价格</dt><dd>{displayPrice(a)}</dd><dt>参考配额</dt><dd>{displayTraffic(a)}</dd><dt>线路描述</dt><dd>{displayRoute(a)}</dd><dt>协议 / 软件</dt><dd>{displayProtocols(a)}</dd><dt>计费提示</dt><dd>{payment}</dd></dl><p class="profile-small-note">起价、流量与线路来自摘要字段，具体档位的对应关系需在套餐页确认。来源未提供完整套餐表与倍率，暂不计算每 GB 成本。</p></div></section>
+
+      <section id="analysis"><span class="profile-section-number">02 / PRICE & ALLOWANCE</span><h2>预算与流量：把摘要放回实际使用</h2><h3>{e.pricing.heading}</h3><p>{e.pricing.text}</p><h3>{e.traffic.heading}</h3><p>{e.traffic.text}</p><p class="profile-reading-link">延伸阅读：<a href="/blog/budget-checklist/">怎样建立套餐预算</a> · <a href="/blog/cost-per-gb/">流量、倍率与计费周期的计算方法</a></p></section>
+
+      <section id="connection"><span class="profile-section-number">03 / NETWORK & CLIENTS</span><h2>{e.connection.heading}</h2><p>{e.connection.text}</p>{protocolLinks.length>0&&<p class="profile-reading-link">协议资料：{protocolLinks.map((link,i)=><>{i>0&&' · '}<a href={link.url} target="_blank" rel="noopener noreferrer">{link.name} ↗</a></>)}。协议文档用于理解配置，不代表对该品牌的认证。</p>}<div class="profile-task-note"><strong>验证时保留同一组条件</strong><p>在自己的设备和常用网络中，完成订阅导入、配置更新与实际任务，再记录节点和时段。检查方法见<a href="/blog/trial-checklist/">试用清单</a>；Windows、Android、iOS 与 macOS 的操作路线见<a href="/guides/">教程中心</a>。</p></div></section>
+
+      <section id="fit"><span class="profile-section-number">04 / MAKE YOUR CHOICE</span><h2>哪些需求值得继续核对</h2><div class="profile-fit-grid"><div><h3>可以继续研究的情况</h3><ul>{e.suitable.map(item=><li>{item}</li>)}</ul></div><div><h3>先确认这一项取舍</h3><p>{e.tradeoff}</p></div></div><h3>购买前的三项重点</h3><ol class="profile-checklist">{e.checklist.map(item=><li>{item}</li>)}</ol></section>
+
+      <section id="coupon"><span class="profile-section-number">05 / OFFER & ACCESS</span><h2>{a.name}优惠码与访问入口</h2>{a.coupon?<><Coupon code={a.coupon.code} name={a.name}/><p>优惠码由维护者提供于 {a.coupon.providedAt}，请保留大小写。选定套餐与付款周期后，在结算页确认优惠结果；折扣比例、期限、新老用户与续费适用条件，以当期活动及实际订单为准。</p></>:<p>本站暂未收录{a.name}优惠码。可通过品牌入口查看当期套餐与活动，再按实际订单金额比较；未收录代码不表示服务商没有优惠。</p>}<p class="profile-small-note">访问链接中的邀请参数与结算优惠码属于不同字段，注册入口不能代替结算时的优惠确认。</p><div class="profile-links">{a.affiliateUrl&&<a class="button" href={a.affiliateUrl} target="_blank" rel="sponsored noopener noreferrer">查看品牌套餐（推广）↗</a>}<a href="/coupons/">全部品牌优惠码 →</a></div></section>
+
+      <section id="faq"><span class="profile-section-number">06 / QUESTIONS & ANSWERS</span><h2>关于{a.name}的常见问题</h2><div class="profile-faq">{faqs.map(faq=><details><summary>{faq.question}</summary><p>{faq.answer}</p></details>)}</div></section>
+
+      <section id="alternatives"><span class="profile-section-number">07 / COMPARE WITH CONTEXT</span><h2>把相近方案放在一起看</h2><p>以下按预算、配额或使用条件选取比较对象，说明具体比较理由，展示顺序不代表排名。</p><div class="profile-alternatives">{related.map(({brand:b,reason})=><article><h3><a href={`/airport/${b.slug}/`}>{b.name}</a></h3><p class="profile-alt-facts">{displayPrice(b)}<br/>{displayTraffic(b)}</p><p>{reason}</p><a href={`/compare/?brands=${a.id},${b.id}`}>与{a.name}对照 →</a></article>)}</div></section>
+
+      <footer class="profile-sources" id="sources"><h2>资料来源与编辑说明</h2><p>本文由三毛导航整理与分析。品牌名称、推广入口和优惠码由维护者提供；价格、流量与线路信息引用下列来源。采集日期与文章更新日期分别标注，不代表官网核验或本站实测。</p><ul>{a.referenceOffer?<li><a href={a.referenceOffer.source} target="_blank" rel="noopener noreferrer">参考站：{a.name}资料 ↗</a> · 采集于 {a.referenceOffer.collectedAt}</li>:<li>套餐原文待补充，当前不引用其他品牌的报价或配额。</li>}{protocolLinks.map(link=><li><a href={link.url} target="_blank" rel="noopener noreferrer">{link.name} ↗</a> · 配置文档</li>)}</ul><p>本页含推广链接，通过链接注册或购买可能产生佣金。商业关系不决定排名。有关资料更正、当期套餐或优惠条件的补充，请通过<a href="/contact/">联系与纠错</a>提交来源。</p><p><a href="/editorial-policy/">阅读编辑政策 →</a></p></footer>
+    </article>
+
+    <aside class="brand-purchase-box profile-sidebar" aria-label="品牌速览与访问入口"><span class="eyebrow">KEEP IN VIEW</span><h2>{a.name}</h2><p class="profile-sidebar-angle">{e.angle}</p><p class="brand-price">{displayPrice(a)}</p><p>参考流量：{displayTraffic(a)}</p><p class="brand-source-note">{payment}</p>{a.coupon&&<Coupon code={a.coupon.code} name={a.name}/>}<a class="button" href={a.affiliateUrl} rel="sponsored noopener noreferrer" target="_blank">访问品牌（推广）↗</a><a class="profile-sidebar-compare" href={compareUrl}>加入相关品牌对比 →</a><hr/><strong class="profile-sidebar-label">本页判断重点</strong><ul>{e.highlights.map(point=><li>{point}</li>)}</ul><p class="brand-source-note">第三方参数与编辑分析，当前条件请以下单页为准。</p><a href="#sources" class="text-link">查看来源与说明 →</a></aside>
+  </div>
+</div>
+</Base>

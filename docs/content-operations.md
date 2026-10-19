@@ -58,3 +58,6 @@ npm run audit
 ## 本次品牌导入
 
 用户原始名称、链接、优惠码见 docs/brand-input.json；逐项采集结果见 docs/brand-import.csv。referenceOffer 保留 priceText、trafficText、routeText、protocolText、priceKind、source、collectedAt；不要补写缺失流量周期。coupon 保留原始大小写、提供日期与 unverified 状态；未知折扣、期限、适用条件不推断。来源未给完整档位、倍率和可售状态，因此 plans 保持空，不计算成本或发布实测排名。
+
+## 品牌分析文案
+`src/data/brand-editorials.ts` 为每个品牌维护独立的分析内容，页面用统一版式渲染。更新套餐参数后须同步检查文案与 alternatives 比较理由，避免静态分析中的数字过期。文章可以解释已有参数与条件，但不能补写未知套餐、优惠比例、测试结果或历史运营经历。编辑分析不改变 testStatus，更新日期不冒充实测日期。说明见 docs/brand-editorial-notes.md。

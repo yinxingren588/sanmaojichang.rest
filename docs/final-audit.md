@@ -1,6 +1,6 @@
 # 最终验收报告
 
-生成于 2026-10-19T11:22:54.591Z。状态仅代表实际执行结果。
+生成于 2026-10-19T11:44:36.316Z。状态仅代表实际执行结果。
 
 | 检查项 | 状态 | 说明 |
 | --- | --- | --- |
@@ -13,6 +13,7 @@
 | browser | PASS | 详见原始记录 |
 | background | PASS | 详见原始记录 |
 | lighthouse | PASS | {"home-mobile":{"performance":99,"accessibility":96,"best-practices":100,"seo":100},"home-desktop":{"performance":100,"accessibility":96,"best-practices":100,"seo":100},"article-mobile":{"performance":100,"accessibility":100,"best-practices":100,"seo":100}} |
+| brand-performance | PASS | 详见原始记录 |
 | indexnow-dry-run | PASS | 详见原始记录 |
 | github | PASS | 43ab4c19d288d73369ff37888d842e8984aa51d3 |
 | github-actions | PASS | 详见原始记录 |
@@ -39,3 +40,7 @@
 ## 上线后事项
 
 按 docs/deployment.md 完成正式域名、Cloudflare Pages 与 Bing 验证。补充大佬云来源、完整套餐档位与优惠码条件后再更新资料；官方核验及实测需独立证据，不能以采集日期代替。
+
+## 品牌详情编辑升级
+
+29 个品牌分别撰写独立选购分析：各自的编辑结论、预算与流量解读、线路与客户端核对、适用条件与取舍、三项购买重点、FAQ 及带理由的相近方案比较。统一阅读版式含目录、参数摘要与侧栏入口；Article 结构化数据与正文标题、摘要一致。编辑内容不修改原始参考参数、优惠码或核验状态。详见 docs/brand-editorial-notes.md。
