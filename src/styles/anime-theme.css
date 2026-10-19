@@ -1,0 +1,184 @@
+/* Site-wide illustration theme. Text and layout remain in normal document flow. */
+:root {
+  background: #dcecf7;
+  --scene-paper: rgba(255, 255, 255, .91);
+  --scene-border: rgba(255, 255, 255, .88);
+  --scene-shadow: 0 14px 45px rgba(39, 79, 120, .075);
+}
+
+body { position: relative; isolation: isolate; background: transparent; }
+.anime-scenery {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background: #c8e2f2 url('/images/anime-sky.webp') center center / cover no-repeat;
+}
+.anime-scenery::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(238, 247, 255, .08), rgba(246, 250, 255, .12) 55%, rgba(235, 245, 251, .16));
+}
+.scenery-cloud {
+  position: absolute;
+  width: min(40vw, 650px);
+  height: 180px;
+  border-radius: 50%;
+  opacity: .23;
+  background: radial-gradient(ellipse, #fff 0 28%, rgba(255, 255, 255, .75) 43%, transparent 70%);
+  filter: blur(12px);
+  animation: scenery-cloud-drift 80s ease-in-out infinite alternate;
+}
+.scenery-cloud.one { top: 9%; left: -12%; }
+.scenery-cloud.two { top: 28%; right: -10%; width: min(34vw, 550px); animation-duration: 105s; animation-delay: -40s; }
+@keyframes scenery-cloud-drift {
+  from { transform: translate3d(-4vw, 0, 0); }
+  to { transform: translate3d(17vw, -16px, 0); }
+}
+
+.site-header {
+  background: rgba(255, 255, 255, .92);
+  border-color: rgba(255, 255, 255, .9);
+  box-shadow: 0 4px 24px rgba(39, 79, 120, .06);
+  backdrop-filter: blur(12px);
+}
+main { padding-top: 0; }
+.hero { background: transparent; border-bottom: 0; }
+.hero-inner { padding-top: 54px; padding-bottom: 38px; gap: 40px; }
+.hero-inner > div:first-child {
+  padding: 34px;
+  border: 1px solid var(--scene-border);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, .88);
+  box-shadow: var(--scene-shadow);
+}
+.hero h1 { font-size: clamp(32px, 3.25vw, 47px); }
+.hero-panel {
+  border: 1px solid var(--scene-border);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, .93);
+  box-shadow: var(--scene-shadow);
+}
+.hero-panel::before { border-color: rgba(255, 255, 255, .78); border-radius: 20px; }
+.trust-strip {
+  margin-top: 0;
+  margin-bottom: 22px;
+  padding-inline: 20px;
+  background: rgba(255, 255, 255, .91);
+  border: 1px solid var(--scene-border);
+  border-radius: 14px;
+  box-shadow: var(--scene-shadow);
+}
+.section, .section.soft { background: transparent; border: 0; padding-top: 14px; padding-bottom: 14px; }
+.section > .container {
+  padding: 34px;
+  background: var(--scene-paper);
+  border: 1px solid var(--scene-border);
+  border-radius: 22px;
+  box-shadow: var(--scene-shadow);
+}
+.section.soft > .container { background: rgba(243, 248, 255, .94); }
+.section:last-child { padding-bottom: 38px; }
+.empty-state, .article-card, .topic-card, .guide-card, .airport-card, .ranking-preview, .glossary-links {
+  border-radius: 13px;
+}
+.empty-state { background: rgba(247, 250, 255, .94); }
+.article-card, .topic-card, .guide-card, .glossary-links { background: rgba(255, 255, 255, .94); }
+.compare-band { background: linear-gradient(120deg, #203e70, #345c94); border-radius: 15px; }
+.site-footer {
+  margin-top: 22px;
+  background: rgba(246, 250, 255, .95);
+  border-top: 1px solid var(--scene-border);
+  backdrop-filter: blur(8px);
+}
+
+/* Interior pages get one continuous paper surface over the same landscape. */
+main > .container:not(.trust-strip):not(.breadcrumbs) {
+  margin-top: 26px;
+  margin-bottom: 32px;
+  padding: 0 38px;
+  border: 1px solid var(--scene-border);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, .95);
+  box-shadow: var(--scene-shadow);
+}
+main > .breadcrumbs {
+  width: fit-content;
+  max-width: min(1200px, calc(100% - 64px));
+  margin-left: max(32px, calc((100% - 1200px) / 2));
+  margin-top: 22px;
+  margin-bottom: 0;
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .94);
+}
+.page-intro { padding-top: 32px; }
+.content-layout { grid-template-columns: minmax(0, 760px) minmax(190px, 1fr); gap: 42px; }
+.article-aside { background: rgba(241, 247, 255, .8); padding: 20px; border: 1px solid #dfe9f5; border-radius: 13px; }
+.article-meta { margin-bottom: 28px; }
+.related { padding-top: 32px; }
+
+@media (min-width: 1700px) {
+  .anime-scenery { background-position: center 58%; }
+}
+@media (max-width: 1100px) {
+  .hero-inner { gap: 28px; }
+  .hero-inner > div:first-child { padding: 27px; }
+  .hero h1 { font-size: 36px; }
+  .content-layout { gap: 28px; }
+}
+@media (max-width: 850px) {
+  .hero-inner { grid-template-columns: 1fr; padding-top: 30px; padding-bottom: 24px; gap: 22px; }
+  .hero-inner > div:first-child { padding: 30px; }
+  .hero h1 { font-size: 40px; }
+  .hero-panel { max-width: none; }
+  .hero-panel::before { display: none; }
+  .section > .container { padding: 26px; }
+  .content-layout { grid-template-columns: 1fr; }
+  main > .container:not(.trust-strip):not(.breadcrumbs) { padding: 0 26px; }
+  main > .breadcrumbs { max-width: calc(100% - 40px); margin-left: 20px; padding: 10px 14px; }
+  .mobile-menu nav { background: rgba(255, 255, 255, .98); }
+}
+@media (max-width: 600px) {
+  .anime-scenery { background-position: 58% center; background-image: url('/images/anime-sky-mobile.webp'); }
+  .scenery-cloud { width: 70vw; height: 120px; filter: blur(9px); }
+  .scenery-cloud.two { width: 60vw; }
+  .hero-inner { padding-top: 22px; gap: 18px; }
+  .hero-inner > div:first-child { padding: 24px 21px; border-radius: 18px; }
+  .hero h1 { font-size: 33px; }
+  .hero .eyebrow { font-size: 9px; gap: 7px; letter-spacing: .06em; }
+  .hero .pill { font-size: 10px; }
+  .hero-panel { border-radius: 18px; }
+  .trust-strip { padding: 18px 16px; margin-bottom: 10px; gap: 13px 8px; }
+  .trust-strip span { font-size: 10px; gap: 6px; }
+  .section, .section.soft { padding-top: 10px; padding-bottom: 10px; }
+  .section > .container { padding: 25px 19px; border-radius: 18px; }
+  .section-heading { gap: 12px; }
+  .section-heading h2 { font-size: 21px; }
+  .section-heading > a { font-size: 11px; }
+  .section-heading > .eyebrow { display: none; }
+  .quick-grid { gap: 23px 13px; }
+  .quick-card h3 { font-size: 14px; }
+  .topic-card { gap: 8px; padding: 16px 9px; }
+  .topic-card h3 { font-size: 14px; }
+  .topic-card p { font-size: 9px; }
+  .topic-icon { width: 27px; font-size: 19px; }
+  .article-card { padding: 21px 19px; }
+  .guides-grid { gap: 10px; }
+  .guide-card { padding: 18px 12px; }
+  .guide-card h3 { font-size: 13px; }
+  .compare-band { padding: 23px; }
+  .faq-layout { gap: 24px; }
+  main > .container:not(.trust-strip):not(.breadcrumbs) { padding: 0 21px; margin-top: 18px; border-radius: 18px; }
+  main > .breadcrumbs { max-width: calc(100% - 36px); margin-left: 18px; padding: 10px 12px; font-size: 11px; }
+  .page-intro h1 { font-size: 27px; }
+  .page-intro p { font-size: 13px; }
+  .article-aside { padding: 16px; }
+  .site-footer { margin-top: 18px; }
+  .compare-control select { flex: 1; min-width: 0; width: 0; max-width: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scenery-cloud { animation: none; }
+}

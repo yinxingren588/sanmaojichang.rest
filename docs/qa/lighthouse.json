@@ -1,6 +1,6 @@
 {
   "status": "PASS",
-  "checkedAt": "2026-10-19T10:35:36.964Z",
+  "checkedAt": "2026-10-19T10:48:44.060Z",
   "errors": [],
   "scores": {
     "home-mobile": {
@@ -10,7 +10,7 @@
       "seo": 100
     },
     "home-desktop": {
-      "performance": 100,
+      "performance": 99,
       "accessibility": 100,
       "best-practices": 100,
       "seo": 100
@@ -24,17 +24,17 @@
   },
   "metrics": {
     "home-mobile": {
-      "lcpMs": 1377.488,
+      "lcpMs": 1349.2000000000003,
       "cls": 0,
       "tbtMs": 0
     },
     "home-desktop": {
-      "lcpMs": 375.624,
+      "lcpMs": 414.98695000000015,
       "cls": 0,
-      "tbtMs": 0
+      "tbtMs": 5.5
     },
     "article-mobile": {
-      "lcpMs": 1202.895,
+      "lcpMs": 1169.7089999999998,
       "cls": 0,
       "tbtMs": 0
     }

@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import '../styles/anime-theme.css';
 import Icon from '../components/Icon.astro';
 import { SITE } from '../data/site';
 interface Crumb { name: string; url: string }
@@ -24,6 +25,7 @@ const structured: Record<string,unknown>[] = [
 <meta name="theme-color" content="#1557e6"/><link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
 {structured.map(s=><script type="application/ld+json" set:html={JSON.stringify(s).replace(/</g,'\u003c')}/>)}
 </head><body>
+<div class="anime-scenery" aria-hidden="true"><span class="scenery-cloud one"></span><span class="scenery-cloud two"></span></div>
 <a class="skip-link" href="#main">跳到正文</a>
 <header class="site-header"><div class="container header-inner">
 <a class="logo" href="/" aria-label="三毛导航 SANMAO JOURNAL 首页"><span class="logo-mark" aria-hidden="true">三<span>↗</span></span><span>三毛导航<small>SANMAO JOURNAL</small></span></a>
