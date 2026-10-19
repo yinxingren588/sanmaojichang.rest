@@ -1,0 +1,43 @@
+{
+  "status": "PASS",
+  "checkedAt": "2026-10-19T10:33:06.950Z",
+  "errors": [],
+  "scores": {
+    "home-mobile": {
+      "performance": 100,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100
+    },
+    "home-desktop": {
+      "performance": 100,
+      "accessibility": 100,
+      "best-practices": 96,
+      "seo": 100
+    },
+    "article-mobile": {
+      "performance": 100,
+      "accessibility": 100,
+      "best-practices": 100,
+      "seo": 100
+    }
+  },
+  "metrics": {
+    "home-mobile": {
+      "lcpMs": 1358.829,
+      "cls": 0,
+      "tbtMs": 0
+    },
+    "home-desktop": {
+      "lcpMs": 352.3089,
+      "cls": 0,
+      "tbtMs": 0
+    },
+    "article-mobile": {
+      "lcpMs": 1141.2949999999998,
+      "cls": 0,
+      "tbtMs": 0
+    }
+  },
+  "scope": "本机 Chrome / Lighthouse 13.5.0，本地生产预览；首页手机、首页桌面、文章手机各一次。非线上实测，INP 未测试。"
+}

@@ -1,0 +1,12 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import { sections } from '../../data/site';
+export function getStaticPaths() { return Object.keys(sections).map(section=>({params:{section}})); }
+const section = Astro.params.section!; const info = sections[section];
+const articles = (await getCollection('articles',a=>!a.data.draft && a.data.section===section)).sort((a,b)=>b.data.updated.localeCompare(a.data.updated)||a.id.localeCompare(b.id));
+---
+<Base title={`${info.name}｜三毛导航`} description={info.description} crumbs={[{name:info.name,url:`/${section}/`}]}>
+<div class="container"><header class="page-intro"><span class="eyebrow">{info.label}</span><h1>{info.name}</h1><p>{info.description}</p></header><div class="page-body"><div class="article-grid">{articles.map(a=><ArticleCard article={a}/>)}</div><div class="notice">建议先阅读<a class="text-link" href="/recommend/beginner/">新手选择专题</a>，再根据设备或具体问题继续阅读。</div></div></div>
+</Base>

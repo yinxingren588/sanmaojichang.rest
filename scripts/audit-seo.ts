@@ -1,0 +1,32 @@
+import {readFile} from 'node:fs/promises';
+import {load} from 'cheerio';
+import {domain,pages,result} from './shared.ts';
+const all=await pages(),errors:string[]=[];const titles=new Set<string>(),descriptions=new Set<string>();
+const indexed=new Set(all.filter(p=>!p.$('meta[name="robots"]').attr('content')?.includes('noindex')).map(p=>domain+p.url));
+for(const {url,$,html} of all){
+  const title=$('title').text(),description=$('meta[name="description"]').attr('content')||'';
+  if(!title.trim()||titles.has(title))errors.push(`${url} 缺失或重复 Title`);titles.add(title);
+  if(!description.trim()||descriptions.has(description))errors.push(`${url} 缺失或重复 Description`);descriptions.add(description);
+  if($('h1').length!==1)errors.push(`${url} H1 数量不为 1`);
+  if($('link[rel="canonical"]').length!==1||$('link[rel="canonical"]').attr('href')!==domain+url)errors.push(`${url} Canonical 错误`);
+  const robots=$('meta[name="robots"]').attr('content')||'';
+  if(!/^(index|noindex), follow/.test(robots))errors.push(`${url} Robots 缺失或格式不符`);
+  if($('html').attr('lang')!=='zh-CN')errors.push(`${url} 语言缺失`);
+  if($('main').text().trim().length<(url==='/404/'?40:80))errors.push(`${url} 正文过短或空白`);
+  if(/\{\{[^{}\n]+\}\}|\bTODO\b|lorem ipsum/i.test(html))errors.push(`${url} 存在未替换变量`);
+  if($('meta[property="og:url"]').attr('content')!==domain+url)errors.push(`${url} OG URL 错误`);
+  for(const name of ['og:title','og:description','og:type','og:image'])if(!$(`meta[property="${name}"]`).attr('content'))errors.push(`${url} 缺失 ${name}`);
+  if(!$('meta[name="twitter:card"]').attr('content'))errors.push(`${url} Twitter Card 缺失`);
+  const schemas=$('script[type="application/ld+json"]');if(schemas.length<2)errors.push(`${url} 缺失基本 Schema`);
+  schemas.each((_,e)=>{try{const s=JSON.parse($(e).text());if(s['@context']!=='https://schema.org'||!s['@type'])errors.push(`${url} Schema 结构错误`);if(s['@type']==='BreadcrumbList'){s.itemListElement.forEach((x:{position:number;item:string},i:number)=>{if(x.position!==i+1||!x.item.startsWith(domain+'/'))errors.push(`${url} 面包屑不规范`);});}if(s['@type']==='Article'||s['@type']==='BlogPosting'){if(!s.headline||!s.dateModified||!s.datePublished)errors.push(`${url} 文章 Schema 缺字段`);if(s.headline!==$('h1').text()||s.description!==description)errors.push(`${url} Schema 与可见内容不符`);}if(s['@type']==='ItemList'&&(!s.itemListElement.length||s.itemListElement.some((x:{name:string})=>!$('main').text().includes(x.name))))errors.push(`${url} ItemList 与可见内容不符`);}catch{errors.push(`${url} Schema JSON 无效`);}});
+}
+const xml=load(await readFile('dist/sitemap-0.xml','utf8'),{xmlMode:true});
+const listed=xml('url > loc').map((_,e)=>xml(e).text()).get();
+if(new Set(listed).size!==listed.length)errors.push('Sitemap 重复 URL');
+for(const url of listed)if(!indexed.has(url))errors.push(`Sitemap 包含非正式或 noindex URL：${url}`);
+for(const url of indexed)if(!listed.includes(url))errors.push(`Sitemap 缺失 ${url}`);
+xml('url').each((_,e)=>{const m=xml(e).find('lastmod').text();if(!/^\d{4}-\d{2}-\d{2}$/.test(m)||m>'2026-10-19')errors.push('Sitemap lastmod 缺失或日期异常');});
+const index=load(await readFile('dist/sitemap-index.xml','utf8'),{xmlMode:true});
+if(index('sitemap > loc').text()!==domain+'/sitemap-0.xml')errors.push('Sitemap Index 错误');
+const robots=await readFile('dist/robots.txt','utf8');if(!robots.includes('Sitemap: '+domain+'/sitemap-index.xml')||/^Disallow:\s*\/\s*$/m.test(robots))errors.push('robots.txt 错误');
+await result('seo',errors,{pages:all.length,indexable:indexed.size,sitemapUrls:listed.length,scope:'静态本地检查；未使用 Bing 或 Google 在线验证器'});

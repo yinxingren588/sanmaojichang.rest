@@ -1,0 +1,12 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Icon from './Icon.astro';
+import { sections } from '../data/site';
+interface Props { article: CollectionEntry<'articles'>; }
+const { article: a } = Astro.props;
+---
+<a class="article-card" href={`/${a.data.section}/${a.data.slug}/`}>
+  <span class="eyebrow">{sections[a.data.section].name} <span>／ {a.data.tags[0]}</span></span>
+  <h3>{a.data.title}</h3><p>{a.data.description}</p>
+  <span class="card-bottom"><time datetime={a.data.updated}>{a.data.updated.replaceAll('-','.')} 更新</time><Icon/></span>
+</a>

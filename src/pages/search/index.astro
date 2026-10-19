@@ -1,0 +1,12 @@
+---
+import {getCollection} from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import {sections} from '../../data/site';
+const all=(await getCollection('articles',a=>!a.data.draft));
+---
+<Base title="站内搜索｜三毛导航" description="搜索三毛导航的客户端教程、机场选择指南和知识百科。内容也可通过分类列表直接阅读。" noindex crumbs={[{name:'搜索',url:'/search/'}]}><div class="container"><header class="page-intro"><span class="eyebrow">SEARCH THE JOURNAL</span><h1>找到你想了解的问题</h1><p>输入关键词搜索教程、选择指南与知识百科。</p></header><div class="page-body"><label for="site-search" class="text-link">搜索内容</label><input id="site-search" class="search-input" type="search" placeholder="试试：流量、Windows、订阅…" autocomplete="off"/><p id="search-status" class="live-status" aria-live="polite">全部 {all.length} 篇内容</p><ul class="search-list">{all.map(a=><li data-search={`${a.data.title} ${a.data.description} ${a.data.tags.join(' ')}`}><a href={`/${a.data.section}/${a.data.slug}/`}><span class="eyebrow">{sections[a.data.section].name}</span><h2>{a.data.title}</h2><p>{a.data.description}</p></a></li>)}</ul><noscript><p>搜索筛选需要 JavaScript；上方完整目录可直接阅读。</p></noscript></div></div><script>
+const input=document.querySelector<HTMLInputElement>('#site-search')!;
+const rows=[...document.querySelectorAll<HTMLElement>('[data-search]')];
+const status=document.querySelector<HTMLElement>('#search-status')!;
+input.addEventListener('input',()=>{const words=input.value.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);let count=0;rows.forEach(row=>{const match=words.every(w=>row.dataset.search!.toLocaleLowerCase().includes(w));row.hidden=!match;if(match)count++;});status.textContent=words.length?`找到 ${count} 篇相关内容${count?'':'，请换一个关键词。'}`:`全部 ${count} 篇内容`;});
+</script></Base>

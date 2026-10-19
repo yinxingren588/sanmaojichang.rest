@@ -1,0 +1,18 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import { sections, SITE, topics } from '../../data/site';
+export async function getStaticPaths() {
+  return (await getCollection('articles',a=>!a.data.draft)).map(entry=>({params:{section:entry.data.section,slug:entry.data.slug},props:{entry}}));
+}
+const { entry } = Astro.props;
+const { Content, headings } = await render(entry);
+const a = entry.data; const info = sections[a.section];
+const related = (await getCollection('articles',b=>!b.data.draft && b.id!==entry.id)).map(b=>({b,score:b.data.tags.filter(t=>a.tags.includes(t)).length})).sort((x,y)=>y.score-x.score||x.b.id.localeCompare(y.b.id)).slice(0,3).map(x=>x.b);
+const relatedTopic = topics.find(t=>t.related.includes(a.slug))||topics[2];
+const schema = [{'@context':'https://schema.org','@type':a.section==='blog'?'BlogPosting':'Article',headline:a.title,description:a.description,datePublished:a.published,dateModified:a.updated,inLanguage:'zh-CN',mainEntityOfPage:`${SITE.domain}/${a.section}/${a.slug}/`,author:{'@type':'Organization',name:SITE.name,url:`${SITE.domain}/about/`},publisher:{'@id':`${SITE.domain}/#organization`}}];
+---
+<Base title={`${a.title}｜三毛导航`} description={a.description} type="article" crumbs={[{name:info.name,url:`/${a.section}/`},{name:a.title,url:`/${a.section}/${a.slug}/`}]} schema={schema}>
+<div class="container"><header class="page-intro"><span class="eyebrow">{info.label} / {a.tags[0]}</span><h1>{a.title}</h1><p>{a.description}</p></header><div class="article-meta"><span>撰写：三毛导航</span><span>发布 <time datetime={a.published}>{a.published}</time></span><span>更新 <time datetime={a.updated}>{a.updated}</time></span><span>资料类型：编辑整理</span></div><div class="content-layout"><article class="prose"><Content/><div class="source-list"><h2>参考来源与阅读说明</h2><p>以下为技术概念或软件行为的官方参考。操作界面可能随版本变化；本文未包含品牌实测或套餐承诺。</p><ul>{a.sources.map(url=><li><a href={url} rel="noopener noreferrer" target="_blank">{url}</a></li>)}</ul><p>发现错误？请通过<a href="/contact/">联系与纠错</a>页面提交证据。</p></div></article><aside class="article-aside"><h2>本文目录</h2>{headings.filter(h=>h.depth===2).map(h=><a href={`#${h.slug}`}>{h.text}</a>)}<hr style="border:0;border-top:1px solid #e3e9f1;margin:22px 0"/><h2>继续探索</h2><a href={`/recommend/${relatedTopic.slug}/`}>{relatedTopic.name}选择专题 →</a><a href="/glossary/">术语解释 →</a><a href="/guides/troubleshooting/">连接排查 →</a></aside></div><section class="related page-body"><h2>相关内容</h2><div class="article-grid">{related.map(b=><ArticleCard article={b}/>)}</div></section></div>
+</Base>

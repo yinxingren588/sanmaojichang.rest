@@ -1,0 +1,7 @@
+---
+import type { Airport } from '../data/airports';
+import { entryPlan, displayPrice, unknown } from '../lib/airports';
+interface Props { airport: Airport; }
+const { airport:a } = Astro.props; const plan = entryPlan(a);
+---
+<article class="airport-card"><span class="pill">{a.testStatus==='tested'?'有测试记录':a.testStatus==='official-data'?'官方资料整理':'资料待核验'}</span><h3>{a.name}</h3><p>{a.description}</p><dl><dt>起步价格</dt><dd>{displayPrice(a)}</dd><dt>流量</dt><dd>{plan ? `${plan.trafficGB} ${plan.trafficUnit} / 月` : unknown}</dd><dt>线路</dt><dd>{a.routeType || unknown}</dd><dt>适合人群</dt><dd>{a.suitableFor.join('、') || unknown}</dd></dl><p>优点：{a.advantages.join('；') || unknown}</p><p>注意：{a.disadvantages.join('；') || unknown}</p><a class="text-link" href={`/airport/${a.slug}/`}>查看品牌资料 →</a></article>

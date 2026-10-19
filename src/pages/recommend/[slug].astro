@@ -1,0 +1,16 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import EmptyState from '../../components/EmptyState.astro';
+import AirportCard from '../../components/AirportCard.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import { topics } from '../../data/site';
+import { airports } from '../../data/airports';
+export function getStaticPaths(){ return topics.map(topic=>({params:{slug:topic.slug},props:{topic}})); }
+const {topic:t}=Astro.props;
+const brands=airports.filter(a=>a.categories.includes(t.slug)&&a.testStatus!=='unverified'&&a.lastVerified);
+const articles=(await getCollection('articles',a=>!a.data.draft && t.related.includes(a.data.slug)));
+---
+<Base title={`${t.headline}｜三毛导航`} description={t.intro} crumbs={[{name:'机场推荐',url:'/recommend/'},{name:t.name,url:`/recommend/${t.slug}/`}]}>
+<div class="container"><header class="page-intro"><span class="eyebrow">FIND YOUR FIT / {t.name}</span><h1>{t.headline}</h1><p>{t.intro}</p></header><div class="page-body"><h2>先检查这三件事</h2><ol class="flow-steps">{t.checks.map(c=><li>{c}</li>)}</ol><div class="notice">选择方法适用于资料核对，不构成品牌实测结论。使用前应自行确认当地要求及目标平台规则。</div><section class="section"><h2 class="gap-bottom">与这类需求相关的品牌</h2>{brands.length?<div class="airport-grid">{brands.map(a=><AirportCard airport={a}/>)}</div>:<EmptyState text={`暂未录入${t.name}分类的已核验品牌。请先用上面的清单了解选择标准，品牌资料将在核验后补充。`}/>}</section><h2 class="gap-bottom">继续阅读</h2><div class="article-grid">{articles.map(a=><ArticleCard article={a}/>)}</div><div class="notice">比较依据见<a class="text-link" href={`/ranking/${t.ranking}/`}>相关排行榜方法</a>，已有候选时可以进入<a class="text-link" href="/compare/">横向比较工具</a>。</div></div></div>
+</Base>

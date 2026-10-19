@@ -1,0 +1,39 @@
+{
+  "name": "sanmaojichang-editorial",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22.22.0" },
+  "scripts": {
+    "dev": "astro dev --host 127.0.0.1",
+    "check": "astro check",
+    "build": "tsx scripts/prepare-indexnow.ts && astro build && tsx scripts/postbuild.ts",
+    "preview": "astro preview --host 127.0.0.1",
+    "test": "tsx --test tests/*.test.ts",
+    "audit:seo": "tsx scripts/audit-seo.ts",
+    "audit:links": "tsx scripts/check-links.ts",
+    "audit:content": "tsx scripts/validate-content.ts",
+    "audit": "npm run audit:seo && npm run audit:links && npm run audit:content",
+    "indexnow": "tsx scripts/indexnow.ts",
+    "test:browser": "tsx scripts/browser-qa.ts",
+    "report": "tsx scripts/report.ts",
+    "verify": "tsx scripts/verify.ts",
+    "seo:map": "tsx scripts/keyword-map.ts",
+    "test:performance": "tsx scripts/lighthouse-qa.ts"
+  },
+  "dependencies": {
+    "astro": "7.4.0",
+    "@astrojs/sitemap": "3.7.4",
+    "@tailwindcss/vite": "4.3.3",
+    "tailwindcss": "4.3.3"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.10",
+    "typescript": "6.0.3",
+    "tsx": "4.23.15",
+    "cheerio": "1.2.0",
+    "@types/node": "24.10.1",
+    "@playwright/test": "1.64.1",
+    "lighthouse": "13.5.0"
+  }
+}

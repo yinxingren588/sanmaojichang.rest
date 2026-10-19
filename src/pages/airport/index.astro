@@ -1,0 +1,7 @@
+---
+import Base from '../../layouts/Base.astro';
+import EmptyState from '../../components/EmptyState.astro';
+import AirportCard from '../../components/AirportCard.astro';
+import { airports } from '../../data/airports';
+---
+<Base title="机场品牌资料库｜三毛导航" description="机场品牌资料统一记录套餐、协议、地区、支持情况和来源，按核验状态公开；没有证据的字段显示尚未核实。" noindex={airports.length===0} crumbs={[{name:'品牌资料库',url:'/airport/'}]}><div class="container"><header class="page-intro"><span class="eyebrow">BRAND DIRECTORY</span><h1>品牌资料库</h1><p>所有推荐卡片、排行榜和对比表共用同一份资料。官方信息与实际测试分别标明。</p></header><div class="page-body">{airports.length?<div class="airport-grid">{airports.map(a=><AirportCard airport={a}/>)}</div>:<EmptyState title="品牌资料等待录入" text="站点维护者确认品牌与官网后，再逐项核验套餐、地区、设备限制和支持情况。当前未填入示例品牌。"/>}</div></div></Base>
