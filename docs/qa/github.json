@@ -1,0 +1,8 @@
+{
+  "status": "PASS",
+  "checkedAt": "2026-10-19T10:37:00Z",
+  "repository": "https://github.com/yinxingren588/sanmaojichang.rest",
+  "branch": "main",
+  "commit": "cd71e5a4c505c4cb8f653e2e45fd2e310ba43ad9",
+  "evidence": "git push -u origin main 返回 exit 0，创建远程 main 并设置跟踪；后续 GitHub Actions 的 head_sha 与此提交相同"
+}

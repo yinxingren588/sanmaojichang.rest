@@ -3,6 +3,7 @@ import path from 'node:path';
 import { load } from 'cheerio';
 export const root = process.cwd();
 export const domain = 'https://sanmaojichang.rest';
+export const today = () => new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
 export async function files(dir:string, extension?:string):Promise<string[]>{
   const entries=await readdir(dir,{withFileTypes:true});
   const found=await Promise.all(entries.map(e=>e.isDirectory()?files(path.join(dir,e.name),extension):Promise.resolve(!extension||e.name.endsWith(extension)?[path.join(dir,e.name)]:[])));

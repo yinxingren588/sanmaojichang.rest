@@ -19,8 +19,8 @@ const structured: Record<string,unknown>[] = [
 <title>{title}</title><meta name="description" content={description}/><link rel="canonical" href={canonical}/>
 <meta name="robots" content={noindex?'noindex, follow':'index, follow, max-image-preview:large'}/>
 {import.meta.env.PUBLIC_BING_VERIFICATION && <meta name="msvalidate.01" content={import.meta.env.PUBLIC_BING_VERIFICATION}/>}
-<meta property="og:type" content={type}/><meta property="og:title" content={title}/><meta property="og:description" content={description}/><meta property="og:url" content={canonical}/><meta property="og:site_name" content={SITE.name}/><meta property="og:locale" content="zh_CN"/><meta property="og:image" content={`${SITE.domain}/social.svg`}/>
-<meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content={title}/><meta name="twitter:description" content={description}/><meta name="twitter:image" content={`${SITE.domain}/social.svg`}/>
+<meta property="og:type" content={type}/><meta property="og:title" content={title}/><meta property="og:description" content={description}/><meta property="og:url" content={canonical}/><meta property="og:site_name" content={SITE.name}/><meta property="og:locale" content="zh_CN"/><meta property="og:image" content={`${SITE.domain}/social.png`}/>
+<meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content={title}/><meta name="twitter:description" content={description}/><meta name="twitter:image" content={`${SITE.domain}/social.png`}/>
 <meta name="theme-color" content="#1557e6"/><link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
 {structured.map(s=><script type="application/ld+json" set:html={JSON.stringify(s).replace(/</g,'\u003c')}/>)}
 </head><body>
@@ -33,5 +33,6 @@ const structured: Record<string,unknown>[] = [
 <main id="main">{crumbs.length>0 && <nav class="container breadcrumbs" aria-label="面包屑"><a href="/">首页</a>{crumbs.map((c,i)=><><span aria-hidden="true">/</span>{i===crumbs.length-1?<span aria-current="page">{c.name}</span>:<a href={c.url}>{c.name}</a>}</>)}</nav>}<slot/></main>
 <footer class="site-footer"><div class="container"><div class="footer-top"><div><a class="logo" href="/"><span class="logo-mark" aria-hidden="true">三<span>↗</span></span><span>三毛导航<small>SANMAO JOURNAL</small></span></a><p>认真读懂每一份订阅。<br/>有依据地选择，从这里开始。</p></div><div><h2>探索内容</h2><a href="/recommend/">机场推荐</a><a href="/ranking/">排行榜与方法</a><a href="/airport/">品牌资料库</a><a href="/guides/">教程中心</a><a href="/glossary/">知识百科</a></div><div><h2>关于本站</h2><a href="/about/">关于我们</a><a href="/editorial-policy/">编辑政策</a><a href="/contact/">联系与纠错</a><a href="/privacy-policy/">隐私政策</a></div><div class="footer-note"><h2>资料透明，选择有据</h2><p>官方资料与实际测试分别标注。<br/>没有证据的结论，暂不发布。</p><a href="/disclaimer/">免责声明 ↗</a><a href="/sitemap-index.xml">Sitemap ↗</a></div></div><div class="footer-bottom"><span>© 2026 三毛导航 · 独立内容博客</span><span>不销售订阅 · 不保证服务可用性</span></div></div></footer>
 </body></html>
+
 
 

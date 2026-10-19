@@ -1,6 +1,6 @@
 import {readFile} from 'node:fs/promises';
 import {load} from 'cheerio';
-import {domain,pages,result} from './shared.ts';
+import {domain,pages,result,today} from './shared.ts';
 const all=await pages(),errors:string[]=[];const titles=new Set<string>(),descriptions=new Set<string>();
 const indexed=new Set(all.filter(p=>!p.$('meta[name="robots"]').attr('content')?.includes('noindex')).map(p=>domain+p.url));
 for(const {url,$,html} of all){
@@ -25,7 +25,7 @@ const listed=xml('url > loc').map((_,e)=>xml(e).text()).get();
 if(new Set(listed).size!==listed.length)errors.push('Sitemap 重复 URL');
 for(const url of listed)if(!indexed.has(url))errors.push(`Sitemap 包含非正式或 noindex URL：${url}`);
 for(const url of indexed)if(!listed.includes(url))errors.push(`Sitemap 缺失 ${url}`);
-xml('url').each((_,e)=>{const m=xml(e).find('lastmod').text();if(!/^\d{4}-\d{2}-\d{2}$/.test(m)||m>'2026-10-19')errors.push('Sitemap lastmod 缺失或日期异常');});
+xml('url').each((_,e)=>{const m=xml(e).find('lastmod').text();if(!/^\d{4}-\d{2}-\d{2}$/.test(m)||Number.isNaN(Date.parse(m))||m>today())errors.push('Sitemap lastmod 缺失或日期异常');});
 const index=load(await readFile('dist/sitemap-index.xml','utf8'),{xmlMode:true});
 if(index('sitemap > loc').text()!==domain+'/sitemap-0.xml')errors.push('Sitemap Index 错误');
 const robots=await readFile('dist/robots.txt','utf8');if(!robots.includes('Sitemap: '+domain+'/sitemap-index.xml')||/^Disallow:\s*\/\s*$/m.test(robots))errors.push('robots.txt 错误');
