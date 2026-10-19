@@ -1,9 +1,9 @@
 {
-  "status": "PASS",
-  "checkedAt": "2026-10-19T11:22:53.7295284Z",
-  "headSha": "43ab4c19d288d73369ff37888d842e8984aa51d3",
-  "workflowStatus": "completed",
-  "conclusion": "success",
-  "url": "https://github.com/yinxingren588/sanmaojichang.rest/actions/runs/39244076554",
-  "scope": "本次品牌与优惠码内容提交的 GitHub 自动检查；文档记录提交另触发的运行不属于本记录范围"
+  "status": "NOT TESTED",
+  "checkedAt": "2026-10-19T11:45:40.5220511Z",
+  "headSha": "a5c112939fcafb52526b9a9bdb1a8db33290b836",
+  "workflowStatus": "in_progress",
+  "conclusion": null,
+  "url": "https://github.com/yinxingren588/sanmaojichang.rest/actions/runs/39246903715",
+  "scope": "本次品牌编辑升级提交的 GitHub 自动检查；本地构建、审计与浏览器验收已通过"
 }

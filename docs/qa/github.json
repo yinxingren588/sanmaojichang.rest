@@ -1,8 +1,8 @@
 {
   "status": "PASS",
-  "checkedAt": "2026-10-19T11:21:57.2961793Z",
+  "checkedAt": "2026-10-19T11:45:39.9018428Z",
   "repository": "https://github.com/yinxingren588/sanmaojichang.rest",
   "branch": "main",
-  "commit": "43ab4c19d288d73369ff37888d842e8984aa51d3",
-  "evidence": "git push origin main 返回 exit 0，70e8a64..43ab4c1 main -> main；对应本次品牌、参考参数与优惠码更新"
+  "commit": "a5c112939fcafb52526b9a9bdb1a8db33290b836",
+  "evidence": "git push origin main 返回 exit 0，3d86baa..a5c1129 main -> main；对应 29 篇品牌分析与新版阅读页面"
 }

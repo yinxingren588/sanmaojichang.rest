@@ -1,6 +1,6 @@
 # 最终验收报告
 
-生成于 2026-10-19T11:44:36.316Z。状态仅代表实际执行结果。
+生成于 2026-10-19T11:45:41.668Z。状态仅代表实际执行结果。
 
 | 检查项 | 状态 | 说明 |
 | --- | --- | --- |
@@ -15,8 +15,8 @@
 | lighthouse | PASS | {"home-mobile":{"performance":99,"accessibility":96,"best-practices":100,"seo":100},"home-desktop":{"performance":100,"accessibility":96,"best-practices":100,"seo":100},"article-mobile":{"performance":100,"accessibility":100,"best-practices":100,"seo":100}} |
 | brand-performance | PASS | 详见原始记录 |
 | indexnow-dry-run | PASS | 详见原始记录 |
-| github | PASS | 43ab4c19d288d73369ff37888d842e8984aa51d3 |
-| github-actions | PASS | 详见原始记录 |
+| github | PASS | a5c112939fcafb52526b9a9bdb1a8db33290b836 |
+| github-actions | NOT TESTED | 详见原始记录 |
 | Bing 线上验证 / 收录 | NOT TESTED | 尚未连接 Bing Webmaster Tools |
 | 正式域名与 Cloudflare Pages | NOT TESTED | 需要账户部署、域名与 DNS 接入 |
 | IndexNow 正式 HTTP 提交 | NOT TESTED | 仅运行 dry-run，尚未正式提交 |
