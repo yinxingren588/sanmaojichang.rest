@@ -1,0 +1,5 @@
+---
+interface Props { code: string; name: string; }
+const {code,name}=Astro.props;
+---
+<div class="coupon-box"><span>优惠码</span><code>{code}</code><button type="button" class="copy-coupon" data-copy-code={code} aria-label={`复制${name}优惠码`}>复制</button><span class="copy-status" aria-live="polite"></span></div>

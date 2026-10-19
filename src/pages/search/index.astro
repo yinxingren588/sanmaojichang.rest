@@ -2,9 +2,11 @@
 import {getCollection} from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import {sections} from '../../data/site';
-const all=(await getCollection('articles',a=>!a.data.draft));
+import {airports} from '../../data/airports';
+const articles=(await getCollection('articles',a=>!a.data.draft));
+const all=[...articles.map(a=>({title:a.data.title,description:a.data.description,label:sections[a.data.section].name,url:`/${a.data.section}/${a.data.slug}/`,keywords:a.data.tags.join(' ')})),...airports.map(a=>({title:a.name,description:a.description,label:'品牌资料',url:`/airport/${a.slug}/`,keywords:a.coupon?.code||''})),{title:'品牌优惠码汇总',description:'12 个品牌优惠码，一键复制与使用说明。',label:'优惠码',url:'/coupons/',keywords:'折扣 促销'}];
 ---
-<Base title="站内搜索｜三毛导航" description="搜索三毛导航的客户端教程、机场选择指南和知识百科。内容也可通过分类列表直接阅读。" noindex crumbs={[{name:'搜索',url:'/search/'}]}><div class="container"><header class="page-intro"><span class="eyebrow">SEARCH THE JOURNAL</span><h1>找到你想了解的问题</h1><p>输入关键词搜索教程、选择指南与知识百科。</p></header><div class="page-body"><label for="site-search" class="text-link">搜索内容</label><input id="site-search" class="search-input" type="search" placeholder="试试：流量、Windows、订阅…" autocomplete="off"/><p id="search-status" class="live-status" aria-live="polite">全部 {all.length} 篇内容</p><ul class="search-list">{all.map(a=><li data-search={`${a.data.title} ${a.data.description} ${a.data.tags.join(' ')}`}><a href={`/${a.data.section}/${a.data.slug}/`}><span class="eyebrow">{sections[a.data.section].name}</span><h2>{a.data.title}</h2><p>{a.data.description}</p></a></li>)}</ul><noscript><p>搜索筛选需要 JavaScript；上方完整目录可直接阅读。</p></noscript></div></div><script>
+<Base title="站内搜索｜三毛导航" description="搜索三毛导航的客户端教程、机场选择指南和知识百科。内容也可通过分类列表直接阅读。" noindex crumbs={[{name:'搜索',url:'/search/'}]}><div class="container"><header class="page-intro"><span class="eyebrow">SEARCH THE JOURNAL</span><h1>找到你想了解的问题</h1><p>输入关键词搜索品牌、优惠码、教程与知识百科。</p></header><div class="page-body"><label for="site-search" class="text-link">搜索内容</label><input id="site-search" class="search-input" type="search" placeholder="试试：流量、Windows、订阅…" autocomplete="off"/><p id="search-status" class="live-status" aria-live="polite">全部 {all.length} 篇内容</p><ul class="search-list">{all.map(a=><li data-search={`${a.title} ${a.description} ${a.keywords}`}><a href={a.url}><span class="eyebrow">{a.label}</span><h2>{a.title}</h2><p>{a.description}</p></a></li>)}</ul><noscript><p>搜索筛选需要 JavaScript；上方完整目录可直接阅读。</p></noscript></div></div><script>
 const input=document.querySelector<HTMLInputElement>('#site-search')!;
 const rows=[...document.querySelectorAll<HTMLElement>('[data-search]')];
 const status=document.querySelector<HTMLElement>('#search-status')!;

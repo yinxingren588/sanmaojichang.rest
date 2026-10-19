@@ -1,10 +1,10 @@
 # 最终验收报告
 
-生成于 2026-10-19T10:56:30.178Z。状态仅代表实际执行结果。
+生成于 2026-10-19T11:21:06.119Z。状态仅代表实际执行结果。
 
 | 检查项 | 状态 | 说明 |
 | --- | --- | --- |
-| build | PASS | 41 页面；31 个进入 Sitemap |
+| build | PASS | 71 页面；63 个进入 Sitemap |
 | types | PASS | 详见原始记录 |
 | unit | PASS | 详见原始记录 |
 | seo | PASS | 详见原始记录 |
@@ -12,31 +12,30 @@
 | content | PASS | 详见原始记录 |
 | browser | PASS | 详见原始记录 |
 | background | PASS | 详见原始记录 |
-| lighthouse | PASS | {"home-mobile":{"performance":99,"accessibility":100,"best-practices":100,"seo":100},"home-desktop":{"performance":100,"accessibility":100,"best-practices":100,"seo":100},"article-mobile":{"performance":100,"accessibility":100,"best-practices":100,"seo":100}} |
+| lighthouse | PASS | {"home-mobile":{"performance":99,"accessibility":96,"best-practices":100,"seo":100},"home-desktop":{"performance":100,"accessibility":96,"best-practices":100,"seo":100},"article-mobile":{"performance":100,"accessibility":100,"best-practices":100,"seo":100}} |
 | indexnow-dry-run | PASS | 详见原始记录 |
 | github | PASS | cd71e5a4c505c4cb8f653e2e45fd2e310ba43ad9 |
 | github-actions | PASS | 详见原始记录 |
-| Bing 线上验证 / 收录 | NOT TESTED | 尚未连接站点的 Bing Webmaster Tools |
+| Bing 线上验证 / 收录 | NOT TESTED | 尚未连接 Bing Webmaster Tools |
 | 正式域名与 Cloudflare Pages | NOT TESTED | 需要账户部署、域名与 DNS 接入 |
-| IndexNow 正式 HTTP 提交 | NOT TESTED | 已准备验证文件与增量模块，待正式域名可访问后执行 |
-| 真实品牌价格与实测核验 | NOT TESTED | 用户要求全部品牌留空，等待提供 |
+| IndexNow 正式 HTTP 提交 | NOT TESTED | 仅运行 dry-run，尚未正式提交 |
+| 官网价格与优惠码有效性 | NOT TESTED | 来源为用户资料和第三方参考摘要，非官网核验 |
 
 ## 当前内容与范围
 
-- 41 个静态 HTML 页面（含 404）；15 篇正文：5 教程、5 选择指南、5 百科。
-- 品牌数据库为空。品牌与评测动态模板已实现，未生成虚构品牌页面。
-- 六个选择专题、四个榜单模板、比较工具与搜索已实现。
-- 当前无数据的品牌库、榜单、评测、比较及搜索与 404 使用 noindex，Sitemap 仅含可索引页面。
-- 主攻：三毛机场、三毛导航；推荐总页承接机场推荐与三毛机场推荐相关选择意图，不作官网身份暗示。
+- 71 个静态 HTML 页面，63 个进入 Sitemap；15 篇教程、指南与百科正文。
+- 29 个用户提供品牌及完整推广链接，12 个优惠码，28 份第三方参考摘要。
+- 采集来源：https://jichang-tuijian.org/，采集于 2026-10-19；详情来源与原文报价分别保留，见 docs/brand-import.csv。
+- 品牌卡片、29 个品牌详情页、优惠码汇总、目录筛选、站内搜索与 2–4 品牌对比均使用统一数据。
+- 大佬云没有对应参考资料，保留用户入口，价格与流量未知。不以参考站的熊猫cloud 替换。
+- 飞猫、Firefly、快狸保留年付折算说明；部分流量未给周期，不补为月流量。参考站没有完整套餐档位。
+- 参考摘要不进入自动成本计算或排名；无虚构测速、评分、优惠比例与使用期限。
+- 原创动漫天空、海岸与云朵飘动保留，提供暂停与减少动态效果支持。
 
-## 结果边界
+## 验证边界
 
-自动内容检查验证字段与明显问题，无法证明来源真实或保证没有任何事实错误。Schema 仅做本地结构与可见内容一致性检查，没有使用搜索引擎在线验证器。浏览器检查针对本地生产构建，有品牌的比较交互使用隔离夹具；夹具不写入生产资料库。Lighthouse 如存在记录，仅代表记录的本机测试条件，不代表正式 CDN 体验；INP 需要真实访问数据。
+自动检查验证结构、链接、数据一致性与计算规则，不能证明来源真实性。浏览器验收覆盖实际生产页面、真实品牌筛选与对比；成本计算和四家上限另用隔离响应夹具。优惠码复制通过隔离剪贴板验证，不修改系统剪贴板。Lighthouse 仅代表本机测试，INP 与正式 CDN 体验未测试。
 
 ## 上线后事项
 
-按 docs/deployment.md 接入 Cloudflare Pages 与正式域名，设置 Bing 验证值，检查 404 / HTTPS / 跳转，提交 Sitemap。先 dry-run，再验证 IndexNow Key 文件并提交明确变化 URL。提供真实品牌与来源后录入并再次验收。
-
-## 是否可以上线
-
-完成部署后可作为知识博客发布。当前不具备已核验品牌推荐、实测评测和真实排行榜的运营数据；这些内容需等待用户提供品牌并完成核验。
+按 docs/deployment.md 完成正式域名、Cloudflare Pages 与 Bing 验证。补充大佬云来源、完整套餐档位与优惠码条件后再更新资料；官方核验及实测需独立证据，不能以采集日期代替。

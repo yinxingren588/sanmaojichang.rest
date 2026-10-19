@@ -1,0 +1,7 @@
+---
+import Base from '../../layouts/Base.astro';
+import Coupon from '../../components/Coupon.astro';
+import {airports} from '../../data/airports';
+const brands=airports.filter(a=>a.coupon);
+---
+<Base title="机场优惠码汇总：12 个品牌代码与使用说明｜三毛导航" description="整理隐形人、微风网络、飞猫云、Firefly、闪跃、无忧链接等 12 个品牌优惠码，支持一键复制，附品牌入口与使用条件核对说明。" crumbs={[{name:'优惠码',url:'/coupons/'}]}><div class="container"><header class="page-intro"><span class="eyebrow">COUPON DIRECTORY</span><h1>品牌优惠码，一处查找与复制</h1><p>已收录 {brands.length} 个品牌优惠码。复制后，在服务商结算页核对是否生效。</p></header><div class="page-body"><div class="reference-disclosure">优惠码由站点维护者提供于 2026-10-19。折扣比例、有效期、适用套餐及当前可用性尚未核实。请保留大小写，并以下单页实际应付金额为准。下方品牌入口为推广链接，注册或购买可能产生佣金。</div><div class="coupon-grid">{brands.map(a=><article class="coupon-card"><h2><a href={`/airport/${a.slug}/`}>{a.name}</a></h2><Coupon code={a.coupon!.code} name={a.name}/><p>优惠幅度与使用条件请在结算页确认。</p><div class="brand-actions"><a href={`/airport/${a.slug}/`}>价格与流量 →</a><a href={a.affiliateUrl} target="_blank" rel="sponsored noopener noreferrer">访问（推广）↗</a></div></article>)}</div><section class="section prose"><h2>怎样使用优惠码</h2><ol><li>从对应品牌入口进入，确认品牌与套餐。</li><li>复制本页优惠码，粘贴到结算页面的优惠码字段。</li><li>确认折扣已显示、付款周期与流量符合需求，再决定是否购买。</li></ol><p>邀请链接中的 code 参数与优惠码不同，不应相互替代。未列出的品牌表示暂未提供优惠码，并不表示没有活动。</p><a href="/airport/">查看全部 29 个品牌 →</a></section></div></div></Base>

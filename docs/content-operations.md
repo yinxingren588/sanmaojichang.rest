@@ -2,7 +2,7 @@
 
 ## 唯一数据源
 
-`src/data/airports.ts` 是所有品牌与套餐的唯一维护位置。目前数组为空，遵循用户的最新要求。不要往生产数组放虚构品牌或测试夹具。
+`src/data/airports.ts` 是所有品牌与套餐的唯一维护位置。当前含 29 个用户提供品牌、12 个优惠码与 28 份第三方摘要。不要往生产数组放虚构品牌或测试夹具。
 
 收到品牌时先确认名称、主域名和来源链；搜索结果自称“官网”不等于身份已核实。`officialUrl` 只填已经确认的来源，不确定则省略。
 
@@ -10,13 +10,13 @@
 
 按接口维护：id、英文 slug、说明、官方地址、套餐数组、协议、地区、线路、设备限制、AI 与流媒体资料、优点、注意事项、适合人群、专题分类、来源、核验日期和状态。未知数组保持空，未知可选值省略，界面会显示“尚未核实”。
 
-- `unverified`：来源或关键资料未确认，不参与自动排序，详情 noindex。
+- `unverified`：来源或关键资料未确认，不参与自动排序；具有可追溯第三方参考摘要的资料页可索引，缺少报价来源的详情 noindex。
 - `official-data`：官方公开资料已核对，不等于实测。
 - `tested`：存在原始测试记录，必须有 `stability` 环境、日期、次数、失败时长与来源。
 
-`startingPrice` 仅作为接口兼容字段，页面展示与排序从套餐计算，不另抄一份价格。默认月付起价为已核验 CNY 月付、每月流量重置套餐的最低实际金额。
+`startingPrice` 仅作为接口兼容字段，已核验价格从套餐计算；无合格套餐时展示 referenceOffer.priceText 原文，参考摘要不能参与成本排序。默认月付起价为已核验 CNY 月付、每月流量重置套餐的最低实际金额。
 
-`categories` 使用 budget、premium、beginner、stable、ai、streaming。分类是适用需求，不是质量分数。不要从分类自动推导支持能力。
+`categories` 使用 budget、premium、beginner、stable、ai、streaming。目前 budget、premium、beginner 仅按参考起价/线路关联；分类不是适用性实测或质量分数。不要从分类自动推导支持能力。
 
 ## 套餐字段与计算
 
@@ -54,3 +54,7 @@ npm run audit
 ```
 
 录入后检查详情页、推荐专题、排名、对比及 Sitemap。品牌库不空且仍没有合格套餐时，榜单应继续保持无排名。正式部署后再执行 IndexNow dry-run 和明确提交。
+
+## 本次品牌导入
+
+用户原始名称、链接、优惠码见 docs/brand-input.json；逐项采集结果见 docs/brand-import.csv。referenceOffer 保留 priceText、trafficText、routeText、protocolText、priceKind、source、collectedAt；不要补写缺失流量周期。coupon 保留原始大小写、提供日期与 unverified 状态；未知折扣、期限、适用条件不推断。来源未给完整档位、倍率和可售状态，因此 plans 保持空，不计算成本或发布实测排名。

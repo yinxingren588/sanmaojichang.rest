@@ -1,5 +1,5 @@
 import type { Airport } from '../data/airports';
-import { costPerGB, entryPlan, displayPrice, unknown } from '../lib/airports';
+import { costPerGB, entryPlan, displayPrice, displayTraffic, displayRoute, displayProtocols, unknown } from '../lib/airports';
 import { addCandidate, removeCandidate } from '../lib/compare';
 export function initCompare(){
   const root=document.querySelector<HTMLElement>('#compare-tool'); if(!root)return;
@@ -11,7 +11,7 @@ export function initCompare(){
   const chips=document.querySelector<HTMLElement>('#compare-chips')!;
   const output=document.querySelector<HTMLElement>('#compare-output')!;
   const empty=document.querySelector<HTMLElement>('#compare-empty')!;
-  let ids:string[]=[];
+  let ids:string[]=[...new Set((new URLSearchParams(location.search).get('brands')||'').split(',').filter(id=>airports.some(a=>a.id===id)))].slice(0,4);
   const cell=(tag:string,text:string)=>{const e=document.createElement(tag);e.textContent=text;return e;};
   const redraw=(message='')=>{
     chips.replaceChildren(); output.replaceChildren();
@@ -25,16 +25,17 @@ export function initCompare(){
     const head=document.createElement('thead');const hr=document.createElement('tr');hr.append(cell('th','比较维度'));list.forEach(a=>hr.append(cell('th',a.name)));head.append(hr);table.append(head);
     const body=document.createElement('tbody');
     const rows:[string,(a:Airport)=>string][]=[
-      ['月付起价',a=>displayPrice(a)],
-      ['套餐流量',a=>{const p=entryPlan(a);return p?`${p.trafficGB} ${p.trafficUnit}/月，${p.multiplier}×`:unknown;}],
+      ['参考起价',a=>displayPrice(a)],
+      ['参考流量',a=>displayTraffic(a)],
       ['每 GB 成本',a=>{const p=entryPlan(a);return p?`${costPerGB(p)!.toFixed(4)} ${p.currency}/GB`:unknown;}],
-      ['节点地区',a=>a.regions.join('、')||unknown],['协议',a=>a.protocols.join('、')||unknown],['线路',a=>a.routeType||unknown],
+      ['节点地区',a=>a.regions.join('、')||unknown],['参考协议',a=>displayProtocols(a)],['参考线路',a=>displayRoute(a)],
       ['设备限制',a=>a.deviceLimit||unknown],['AI 支持（资料）',a=>a.aiSupport?.join('、')||unknown],['流媒体支持（资料）',a=>a.streamingSupport?.join('、')||unknown],
-      ['优点',a=>a.advantages.join('；')||unknown],['注意事项',a=>a.disadvantages.join('；')||unknown],['适合人群',a=>a.suitableFor.join('、')||unknown],['最后核验',a=>a.lastVerified||unknown]
+      ['优点',a=>a.advantages.join('；')||unknown],['注意事项',a=>a.disadvantages.join('；')||unknown],['适合人群',a=>a.suitableFor.join('、')||unknown],['优惠码（条件待核实）',a=>a.coupon?.code||'暂未提供'],['第三方资料采集',a=>a.referenceOffer?.collectedAt||unknown],['最后核验',a=>a.lastVerified||unknown]
     ];
     rows.forEach(([label,fn])=>{const tr=document.createElement('tr');const th=cell('th',label);th.setAttribute('scope','row');tr.append(th);list.forEach(a=>tr.append(cell('td',fn(a))));body.append(tr);});
     const links=document.createElement('tr');links.append(cell('th','来源与资料'));list.forEach(a=>{const td=document.createElement('td'),link=document.createElement('a');link.href=`/airport/${a.slug}/`;link.textContent='查看品牌来源 →';td.append(link);links.append(td);});body.append(links);table.append(body);output.append(table);
   };
   add.addEventListener('click',()=>{const result=addCandidate(ids,select.value,airports.map(a=>a.id));ids=result.ids;redraw(result.message);});
   clear.addEventListener('click',()=>{ids=[];redraw();select.focus();});
+  redraw();
 }

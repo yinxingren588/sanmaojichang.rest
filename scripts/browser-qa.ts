@@ -1,5 +1,5 @@
 import {chromium} from '@playwright/test';
-import {readFile,writeFile,mkdir} from 'node:fs/promises';
+import {readFile,mkdir} from 'node:fs/promises';
 import {load} from 'cheerio';
 import {pages,result} from './shared.ts';
 import type {Airport} from '../src/data/airports.ts';
@@ -14,13 +14,13 @@ try{
   for(const width of [320,390,768,1440]){
     await page.setViewportSize({width,height:1000});
     for(const p of all){
-      const response=await page.goto(base+(p.url==='/404/'?'/missing-page-qa/':p.url),{waitUntil:'networkidle'});
+      const response=await page.goto(base+(p.url==='/404/'?'/missing-page-qa/':p.url),{waitUntil:'load'});
       if(response?.status()!==(p.url==='/404/'?404:200))errors.push(`${p.url} HTTP ${response?.status()}`);
       const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
       if(overflow)errors.push(`${p.url} ${width}px 页面横向溢出`);
     }
   }
-  checks.push('41 页面 × 4 种视口，无整页横向溢出；404 返回正确状态');
+  checks.push(`${all.length} 页面 × 4 种视口，无整页横向溢出；404 返回正确状态`);
   await page.setViewportSize({width:390,height:844});await page.goto(base);
   await page.getByLabel('展开导航').click();
   if(!await page.getByRole('navigation',{name:'移动端导航'}).isVisible())errors.push('移动导航不可见');
@@ -29,8 +29,11 @@ try{
   await page.goto(base);const faq=page.locator('.faq-list details').first();await faq.locator('summary').click();if(!await faq.getAttribute('open')&&await faq.getAttribute('open')!== '')errors.push('FAQ 未展开');else checks.push('FAQ 原生展开');
   await page.goto(base+'/search/');await page.getByLabel('搜索内容',{exact:true}).fill('Windows');if(await page.locator('.search-list li:visible').count()!==1)errors.push('搜索 Windows 筛选数量异常');
   await page.getByLabel('搜索内容',{exact:true}).fill('no-such-text-qa');if(await page.locator('.search-list li:visible').count()!==0)errors.push('搜索空状态异常');
-  await page.getByLabel('搜索内容',{exact:true}).fill('');if(await page.locator('.search-list li:visible').count()!==15)errors.push('搜索清空后恢复异常');else checks.push('搜索筛选、无结果与清空恢复');
-  await page.goto(base+'/compare/');if(!await page.locator('#add-brand').isDisabled()||!await page.locator('#brand-select').isDisabled())errors.push('无品牌时添加入口未禁用');else checks.push('生产比较工具真实空状态');
+  await page.getByLabel('搜索内容',{exact:true}).fill('');if(await page.locator('.search-list li:visible').count()!==45)errors.push('搜索清空后恢复异常');else checks.push('45 条文章、品牌与优惠码搜索筛选');
+  await page.getByLabel('搜索内容',{exact:true}).fill('yxr888');if(await page.locator('.search-list li:visible').count()!==1)errors.push('优惠码搜索失败');
+  await page.goto(base+'/compare/?brands=flycat,firefly');if(await page.locator('#compare-chips button').count()!==2||!await page.locator('#compare-output').isVisible()||!(await page.locator('#compare-output').innerText()).includes('年付折算'))errors.push('真实品牌比较或年付说明缺失');else checks.push('真实品牌 URL 预选、参考流量与年付折算说明');
+  await page.goto(base+'/airport/');await page.getByLabel('查找品牌或优惠码').fill('weifeng90');if(await page.locator('.airport-card:visible').count()!==1)errors.push('品牌目录筛选失败');
+  const couponContext=await browser.newContext();await couponContext.addInitScript("Object.defineProperty(navigator,'clipboard',{value:{writeText:async function(text){window.qaCopied=text;}}});");const couponPage=await couponContext.newPage();await couponPage.goto(base+'/coupons/');await couponPage.getByRole('button',{name:'复制U1S1（有一说一）优惠码',exact:true}).click();if(await couponPage.evaluate(()=>(window as unknown as {qaCopied:string}).qaCopied)!=='U1S1')errors.push('优惠码大小写或复制失败');await couponContext.close();checks.push('优惠码复制通过浏览器隔离剪贴板验证，不修改系统剪贴板');
   // Isolated response fixture only: no synthetic brand is saved to production files.
   const data:Airport[]=Array.from({length:5},(_,i)=>({id:`fixture-${i}`,name:`TEST_${i}`,slug:`fixture-${i}`,description:'仅自动测试',testStatus:'official-data',lastVerified:'2026-10-19',sources:['https://example.test/'],plans:[{id:'p',name:'p',price:20+i,currency:'CNY',billing:'monthly',trafficGB:100,trafficUnit:'GB',trafficPeriod:'month',multiplier:2,verified:true,available:true,source:'https://example.test/',verifiedAt:'2026-10-19'}],protocols:[],regions:[],advantages:[],disadvantages:[],suitableFor:[],categories:[]}));
   const raw=await readFile('dist/compare/index.html','utf8'),$=load(raw);$('#compare-tool').attr('data-airports',JSON.stringify(data));$('#brand-select').removeAttr('disabled').html('<option value="">请选择品牌</option>'+data.map(a=>`<option value="${a.id}">${a.name}</option>`).join(''));$('#add-brand').removeAttr('disabled');
@@ -53,4 +56,4 @@ try{
   await page.goto(base+'/blog/cost-per-gb/');await page.screenshot({path:'docs/qa/screenshots/article-mobile.png',fullPage:true});
 }catch(e){errors.push(String(e));}finally{await browser.close();}
 errors.push(...consoleErrors.map(e=>'浏览器脚本错误：'+e));
-await result('browser',errors,{checks,viewports:[320,390,768,1440],browser:'Installed Google Chrome, Playwright headless',scope:'本地生产构建；比较有品牌路径使用隔离测试数据，生产数据库保持空白'});
+await result('browser',errors,{checks,viewports:[320,390,768,1440],browser:'Installed Google Chrome, Playwright headless',scope:'本地生产构建全部页面；29 个真实录入品牌；计算和四家上限另用隔离响应夹具'});

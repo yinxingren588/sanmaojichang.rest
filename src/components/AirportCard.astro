@@ -1,7 +1,8 @@
 ---
 import type { Airport } from '../data/airports';
-import { entryPlan, displayPrice, unknown } from '../lib/airports';
+import { displayPrice, displayTraffic, displayRoute, evidenceLabel } from '../lib/airports';
+import Coupon from './Coupon.astro';
 interface Props { airport: Airport; }
-const { airport:a } = Astro.props; const plan = entryPlan(a);
+const { airport:a } = Astro.props;
 ---
-<article class="airport-card"><span class="pill">{a.testStatus==='tested'?'有测试记录':a.testStatus==='official-data'?'官方资料整理':'资料待核验'}</span><h3>{a.name}</h3><p>{a.description}</p><dl><dt>起步价格</dt><dd>{displayPrice(a)}</dd><dt>流量</dt><dd>{plan ? `${plan.trafficGB} ${plan.trafficUnit} / 月` : unknown}</dd><dt>线路</dt><dd>{a.routeType || unknown}</dd><dt>适合人群</dt><dd>{a.suitableFor.join('、') || unknown}</dd></dl><p>优点：{a.advantages.join('；') || unknown}</p><p>注意：{a.disadvantages.join('；') || unknown}</p><a class="text-link" href={`/airport/${a.slug}/`}>查看品牌资料 →</a></article>
+<article class="airport-card" data-brand-search={`${a.name} ${a.coupon?.code||''}`}><span class="pill">{evidenceLabel(a)}</span><h3><a href={`/airport/${a.slug}/`}>{a.name}</a></h3><dl><dt>参考起价</dt><dd>{displayPrice(a)}</dd><dt>参考流量</dt><dd>{displayTraffic(a)}</dd><dt>参考线路</dt><dd>{displayRoute(a)}</dd></dl>{a.coupon&&<Coupon code={a.coupon.code} name={a.name}/>}<p class="brand-source-note">{a.referenceOffer?`第三方资料采集：${a.referenceOffer.collectedAt} · 非本站实测`:'套餐资料尚未核实'}</p><div class="brand-actions"><a class="text-link" href={`/airport/${a.slug}/`}>查看详情 →</a>{a.affiliateUrl&&<a class="brand-visit" href={a.affiliateUrl} target="_blank" rel="sponsored noopener noreferrer">访问品牌 ↗</a>}</div></article>

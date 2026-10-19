@@ -5,7 +5,15 @@ import {costPerGB} from '../src/lib/airports.ts';
 const errors:string[]=[];const articles=await files('src/content/articles','.md');const bodies=new Set<string>(),slugs=new Set<string>();
 for(const file of articles){const text=await readFile(file,'utf8');const body=text.replace(/^---[\s\S]*?---\s*/,'').trim();if(body.length<500)errors.push(`${file} 正文不足 500 字符`);const normalized=body.replace(/\s/g,'');if(bodies.has(normalized))errors.push(`${file} 正文完全重复`);bodies.add(normalized);const slug=text.match(/^slug: (.+)$/m)?.[1],section=text.match(/^section: (.+)$/m)?.[1];const id=`${section}/${slug}`;if(!slug||slugs.has(id))errors.push(`${file} Slug 重复或缺失`);slugs.add(id);if(!text.includes('sources:'))errors.push(`${file} 缺少来源`);const published=text.match(/^published: '([^']+)'$/m)?.[1],updated=text.match(/^updated: '([^']+)'$/m)?.[1];if(!published||!updated||updated<published||updated>today())errors.push(`${file} 内容日期错误`);}
 const ids=new Set<string>();for(const a of airports){if(ids.has(a.slug))errors.push(`品牌重复 ${a.slug}`);ids.add(a.slug);if(!/^[a-z0-9-]+$/.test(a.slug))errors.push(`品牌 slug 不规范 ${a.slug}`);if(a.testStatus!=='unverified'&&(!a.lastVerified||!a.sources.length))errors.push(`${a.name} 已核验状态缺来源或日期`);if(a.officialUrl&&!a.sources.includes(a.officialUrl))errors.push(`${a.name} 官网未列入来源`);if(a.testStatus==='tested'&&!a.stability)errors.push(`${a.name} 实测缺记录`);if(a.reviewPublished&&(a.testStatus!=='tested'||!a.stability))errors.push(`${a.name} 评测缺测试记录`);for(const p of a.plans){if(p.verified&&(!p.source||!p.verifiedAt||costPerGB(p)===undefined))errors.push(`${a.name}/${p.name} 已核验套餐缺依据或数值无效`);}}
-for(const p of await pages()){
+const built=await pages();
+for(const a of airports){
+  const profile=built.find(p=>p.url===`/airport/${a.slug}/`);
+  if(!profile){errors.push(`${a.name} 缺少详情页`);continue;}
+  if(a.affiliateUrl&&!profile.$('a[href]').toArray().some(e=>profile.$(e).attr('href')===a.affiliateUrl&&profile.$(e).attr('rel')?.split(' ').includes('sponsored')))errors.push(`${a.name} 推广入口参数或披露标记错误`);
+  if(a.coupon&&!profile.$('[data-copy-code]').toArray().some(e=>profile.$(e).attr('data-copy-code')===a.coupon!.code))errors.push(`${a.name} 优惠码复制字段不一致`);
+  if(a.referenceOffer&&(!profile.$('main').text().includes(a.referenceOffer.priceText)||!profile.$('main').text().includes(a.referenceOffer.trafficText)))errors.push(`${a.name} 参考原文未完整显示`);
+}
+for(const p of built){
   const sentences=p.$('main').text().split(/[。！？\n]/);
   if(sentences.some(s=>/(亲测推荐|永久解锁|保证排名第一|100%稳定)/.test(s)&&!/(不应|不代表|不保证|不能|不发布|无法|不作|不构成|不使用|禁止|不得)/.test(s)))errors.push(`${p.url} 存在需要人工复核的强承诺`);
 }

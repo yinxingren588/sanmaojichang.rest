@@ -4,7 +4,7 @@
 
 代码与本地生产构建可以交付。当前会话没有 Cloudflare 账户连接、域名 DNS 控制或 Bing Webmaster Tools 登录态，因此不将线上部署、站点验证、IndexNow 正式提交或搜索收录标记为成功。
 
-GitHub 推送状态以 `docs/qa/github.json` 与最终验收报告为准。品牌按维护者要求暂时全部留空，不影响知识博客发布；品牌推荐和真实榜单需要后续资料。
+GitHub 推送状态以 `docs/qa/github.json` 与最终验收报告为准。已录入 29 个品牌推广入口、12 个优惠码和 28 份第三方参考摘要；正式官网核验与实测排名仍需补充证据。
 
 ## 2. 接入 Cloudflare Pages
 
@@ -47,7 +47,7 @@ npm run build
 npm run indexnow -- --bootstrap --dry-run
 ```
 
-确认域名上线、31 个可索引 URL 真实可访问后，首次明确提交：
+确认域名上线、构建清单中的可索引 URL 真实可访问后，首次明确提交：
 
 ```sh
 npm run indexnow -- --bootstrap
@@ -88,3 +88,7 @@ HTTP 200 表示已接收，202 表示接收且 Key 校验待完成，均不代�
 - [Cloudflare Pages：Astro](https://developers.cloudflare.com/pages/framework-guides/deploy-an-astro-site/)
 - [Astro 安装与运行要求](https://docs.astro.build/en/install-and-setup/)
 - [Bing Webmaster Guidelines](https://www.bing.com/webmasters/help/webmaster-guidelines-30fba23a)
+
+## 本次品牌内容更新
+
+新增 29 个品牌详情页及 /coupons/；构建后 Sitemap 按实际 robots 生成。大佬云详情因没有报价来源维持 noindex；无合格套餐的榜单不发布排名。推广链接使用 sponsored，优惠码条件待核实。部署前按最新 docs/final-audit.md 复核结果，不沿用早期空数据库的验收范围。
