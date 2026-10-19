@@ -20,23 +20,56 @@ body { position: relative; isolation: isolate; background: transparent; }
   position: absolute;
   inset: 0;
   background: linear-gradient(180deg, rgba(238, 247, 255, .08), rgba(246, 250, 255, .12) 55%, rgba(235, 245, 251, .16));
+  z-index: 3;
+}
+.scenery-sky {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  /* Move the illustrated sky, while the coast and mountains stay still. */
+  mask-image: linear-gradient(to bottom, #000 0%, #000 48%, transparent 69%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 48%, transparent 69%);
+}
+.scenery-sky-art {
+  position: absolute;
+  inset: 0;
+  background: url('/images/anime-sky.webp') center center / cover no-repeat;
+  transform-origin: center top;
+  animation: scenery-sky-drift 22s ease-in-out infinite alternate;
+  will-change: transform;
 }
 .scenery-cloud {
   position: absolute;
-  width: min(40vw, 650px);
-  height: 180px;
-  border-radius: 50%;
-  opacity: .23;
-  background: radial-gradient(ellipse, #fff 0 28%, rgba(255, 255, 255, .75) 43%, transparent 70%);
-  filter: blur(12px);
-  animation: scenery-cloud-drift 80s ease-in-out infinite alternate;
+  left: 0;
+  width: clamp(340px, 45vw, 760px);
+  height: clamp(130px, 16vw, 250px);
+  opacity: .62;
+  background:
+    radial-gradient(ellipse at 20% 65%, #fff 0 15%, #fff6ed 20%, transparent 24%),
+    radial-gradient(ellipse at 38% 45%, #fff 0 22%, #fff8f0 27%, transparent 32%),
+    radial-gradient(ellipse at 59% 53%, #fff 0 23%, #fff8f0 28%, transparent 33%),
+    radial-gradient(ellipse at 77% 66%, #fff 0 15%, #fff6ed 20%, transparent 25%),
+    radial-gradient(ellipse at 48% 73%, #fff 0 29%, #fff9f3 35%, transparent 41%);
+  filter: blur(3px);
+  animation: scenery-cloud-drift 42s linear infinite;
+  will-change: transform;
 }
-.scenery-cloud.one { top: 9%; left: -12%; }
-.scenery-cloud.two { top: 28%; right: -10%; width: min(34vw, 550px); animation-duration: 105s; animation-delay: -40s; }
+.scenery-cloud.one { top: 3%; animation-delay: -11s; }
+.scenery-cloud.two { top: 24%; width: clamp(300px, 38vw, 620px); opacity: .48; animation-duration: 58s; animation-delay: -39s; }
+.scenery-cloud.three { top: 40%; width: clamp(240px, 28vw, 460px); opacity: .32; animation-duration: 70s; animation-delay: -28s; }
+@keyframes scenery-sky-drift {
+  from { transform: translate3d(-3.5vw, 0, 0) scale(1.12); }
+  to { transform: translate3d(3.5vw, -10px, 0) scale(1.12); }
+}
 @keyframes scenery-cloud-drift {
-  from { transform: translate3d(-4vw, 0, 0); }
-  to { transform: translate3d(17vw, -16px, 0); }
+  from { transform: translate3d(-110%, 0, 0); }
+  to { transform: translate3d(110vw, -20px, 0); }
 }
+.scenery-motion-toggle { width: 36px; height: 36px; display: grid; place-content: center; border: 1px solid #dce6f3; border-radius: 50%; background: #f1f6ff; color: #315b94; }
+.scenery-motion-toggle:hover { color: var(--blue); border-color: #9bb9e9; }
+.scenery-motion-toggle[aria-pressed='true'] { background: #e7edf6; color: #67758b; }
+html[data-sky-motion='paused'] :is(.scenery-sky-art, .scenery-cloud) { animation-play-state: paused; }
+html[data-sky-motion='playing'] :is(.scenery-sky-art, .scenery-cloud) { animation-play-state: running; }
 
 .site-header {
   background: rgba(255, 255, 255, .92);
@@ -122,6 +155,7 @@ main > .breadcrumbs {
 
 @media (min-width: 1700px) {
   .anime-scenery { background-position: center 58%; }
+  .scenery-sky-art { background-position: center 58%; }
 }
 @media (max-width: 1100px) {
   .hero-inner { gap: 28px; }
@@ -143,8 +177,11 @@ main > .breadcrumbs {
 }
 @media (max-width: 600px) {
   .anime-scenery { background-position: 58% center; background-image: url('/images/anime-sky-mobile.webp'); }
-  .scenery-cloud { width: 70vw; height: 120px; filter: blur(9px); }
-  .scenery-cloud.two { width: 60vw; }
+  .scenery-sky-art { background-position: 58% center; background-image: url('/images/anime-sky-mobile.webp'); animation-duration: 16s; }
+  .scenery-cloud { width: 88vw; height: 140px; filter: blur(2px); animation-duration: 24s; }
+  .scenery-cloud.two { width: 80vw; animation-duration: 32s; animation-delay: -21s; }
+  .scenery-cloud.three { width: 70vw; animation-duration: 40s; animation-delay: -13s; }
+  .header-actions { gap: 6px; }
   .hero-inner { padding-top: 22px; gap: 18px; }
   .hero-inner > div:first-child { padding: 24px 21px; border-radius: 18px; }
   .hero h1 { font-size: 33px; }
@@ -180,5 +217,5 @@ main > .breadcrumbs {
   .compare-control select { flex: 1; min-width: 0; width: 0; max-width: none; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .scenery-cloud { animation: none; }
+  .scenery-sky-art, .scenery-cloud { animation-play-state: paused; }
 }

@@ -25,15 +25,34 @@ const structured: Record<string,unknown>[] = [
 <meta name="theme-color" content="#1557e6"/><link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
 {structured.map(s=><script type="application/ld+json" set:html={JSON.stringify(s).replace(/</g,'\u003c')}/>)}
 </head><body>
-<div class="anime-scenery" aria-hidden="true"><span class="scenery-cloud one"></span><span class="scenery-cloud two"></span></div>
+<div class="anime-scenery" aria-hidden="true"><div class="scenery-sky"><div class="scenery-sky-art"></div></div><span class="scenery-cloud one"></span><span class="scenery-cloud two"></span><span class="scenery-cloud three"></span></div>
 <a class="skip-link" href="#main">跳到正文</a>
 <header class="site-header"><div class="container header-inner">
 <a class="logo" href="/" aria-label="三毛导航 SANMAO JOURNAL 首页"><span class="logo-mark" aria-hidden="true">三<span>↗</span></span><span>三毛导航<small>SANMAO JOURNAL</small></span></a>
 <nav class="desktop-nav" aria-label="主导航">{navigation.map(([href,label])=><a href={href} aria-current={href==='/'?Astro.url.pathname==='/'?'page':undefined:Astro.url.pathname.startsWith(href)?'page':undefined}>{label}</a>)}</nav>
-<div class="header-actions"><a class="search-trigger" href="/search/" aria-label="搜索站内内容"><Icon name="search"/></a><details class="mobile-menu"><summary aria-label="展开导航"><Icon name="menu"/></summary><nav aria-label="移动端导航">{navigation.map(([href,label])=><a href={href}>{label}</a>)}</nav></details></div>
+<div class="header-actions"><button id="scenery-motion-toggle" class="scenery-motion-toggle" type="button" aria-label="暂停云朵飘动" title="暂停云朵飘动" aria-pressed="false"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16a4 4 0 0 1-1-7.9A6 6 0 0 1 16.5 7a4.5 4.5 0 0 1 1 9H6Zm0 4h5m4 0h3"/></svg></button><a class="search-trigger" href="/search/" aria-label="搜索站内内容"><Icon name="search"/></a><details class="mobile-menu"><summary aria-label="展开导航"><Icon name="menu"/></summary><nav aria-label="移动端导航">{navigation.map(([href,label])=><a href={href}>{label}</a>)}</nav></details></div>
 </div></header>
 <main id="main">{crumbs.length>0 && <nav class="container breadcrumbs" aria-label="面包屑"><a href="/">首页</a>{crumbs.map((c,i)=><><span aria-hidden="true">/</span>{i===crumbs.length-1?<span aria-current="page">{c.name}</span>:<a href={c.url}>{c.name}</a>}</>)}</nav>}<slot/></main>
 <footer class="site-footer"><div class="container"><div class="footer-top"><div><a class="logo" href="/"><span class="logo-mark" aria-hidden="true">三<span>↗</span></span><span>三毛导航<small>SANMAO JOURNAL</small></span></a><p>认真读懂每一份订阅。<br/>有依据地选择，从这里开始。</p></div><div><h2>探索内容</h2><a href="/recommend/">机场推荐</a><a href="/ranking/">排行榜与方法</a><a href="/airport/">品牌资料库</a><a href="/guides/">教程中心</a><a href="/glossary/">知识百科</a></div><div><h2>关于本站</h2><a href="/about/">关于我们</a><a href="/editorial-policy/">编辑政策</a><a href="/contact/">联系与纠错</a><a href="/privacy-policy/">隐私政策</a></div><div class="footer-note"><h2>资料透明，选择有据</h2><p>官方资料与实际测试分别标注。<br/>没有证据的结论，暂不发布。</p><a href="/disclaimer/">免责声明 ↗</a><a href="/sitemap-index.xml">Sitemap ↗</a></div></div><div class="footer-bottom"><span>© 2026 三毛导航 · 独立内容博客</span><span>不销售订阅 · 不保证服务可用性</span></div></div></footer>
+<script>
+const motionToggle = document.querySelector<HTMLButtonElement>('#scenery-motion-toggle');
+if (motionToggle) {
+  const setMotion = (paused: boolean) => {
+    document.documentElement.dataset.skyMotion = paused ? 'paused' : 'playing';
+    motionToggle.setAttribute('aria-pressed', String(paused));
+    motionToggle.setAttribute('aria-label', paused ? '播放云朵飘动' : '暂停云朵飘动');
+    motionToggle.title = paused ? '播放云朵飘动' : '暂停云朵飘动';
+  };
+  const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let userChoseMotion = false;
+  setMotion(preference.matches);
+  preference.addEventListener('change', event => { if (!userChoseMotion) setMotion(event.matches); });
+  motionToggle.addEventListener('click', () => {
+    userChoseMotion = true;
+    setMotion(document.documentElement.dataset.skyMotion !== 'paused');
+  });
+}
+</script>
 </body></html>
 
 

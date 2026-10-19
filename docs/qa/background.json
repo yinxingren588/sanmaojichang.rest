@@ -1,8 +1,8 @@
 {
   "status": "PASS",
-  "checkedAt": "2026-10-19T10:47:44.962Z",
+  "checkedAt": "2026-10-19T10:55:07.583Z",
   "errors": [],
-  "scope": "6 representative routes at 320/390/768/1440px; background assets, reduced motion, mobile menu and browser errors",
+  "scope": "6 representative routes at 320/390/768/1440px; visible cloud displacement, sky layer, pause/play, reduced motion, mobile menu and browser errors",
   "assetRequests": [
     "http://127.0.0.1:4322/images/anime-sky-mobile.webp",
     "http://127.0.0.1:4322/images/anime-sky.webp"

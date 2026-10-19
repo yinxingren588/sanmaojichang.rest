@@ -1,6 +1,6 @@
 # 最终验收报告
 
-生成于 2026-10-19T10:49:22.242Z。状态仅代表实际执行结果。
+生成于 2026-10-19T10:56:30.178Z。状态仅代表实际执行结果。
 
 | 检查项 | 状态 | 说明 |
 | --- | --- | --- |
@@ -12,7 +12,7 @@
 | content | PASS | 详见原始记录 |
 | browser | PASS | 详见原始记录 |
 | background | PASS | 详见原始记录 |
-| lighthouse | PASS | {"home-mobile":{"performance":100,"accessibility":100,"best-practices":100,"seo":100},"home-desktop":{"performance":99,"accessibility":100,"best-practices":100,"seo":100},"article-mobile":{"performance":100,"accessibility":100,"best-practices":100,"seo":100}} |
+| lighthouse | PASS | {"home-mobile":{"performance":99,"accessibility":100,"best-practices":100,"seo":100},"home-desktop":{"performance":100,"accessibility":100,"best-practices":100,"seo":100},"article-mobile":{"performance":100,"accessibility":100,"best-practices":100,"seo":100}} |
 | indexnow-dry-run | PASS | 详见原始记录 |
 | github | PASS | cd71e5a4c505c4cb8f653e2e45fd2e310ba43ad9 |
 | github-actions | PASS | 详见原始记录 |
