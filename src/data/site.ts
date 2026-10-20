@@ -2,12 +2,13 @@ export const SITE = {
   name: '三毛导航',
   domain: 'https://sanmaojichang.rest',
   repository: 'https://github.com/yinxingren588/sanmaojichang.rest',
+  telegram: { handle: '@yinxingren_588', url: 'https://t.me/yinxingren_588' },
   published: '2026-10-19',
   description: '三毛机场主题博客：用清晰的选择指南、客户端教程与可核验资料，帮助你读懂机场订阅。'
 };
 export const sections: Record<string, {name: string; description: string; label: string}> = {
-  guides: {name:'使用教程', description:'从客户端安装、订阅管理到连接排查，按设备找到下一步。', label:'GUIDES'},
-  blog: {name:'选择指南', description:'把价格、流量、线路和服务承诺拆开看，做有依据的选择。', label:'JOURNAL'},
+  guides: {name:'使用教程', description:'从客户端下载、订阅配置到分层排查，按设备与具体问题找到步骤、验证方法和恢复路径。', label:'GUIDES'},
+  blog: {name:'博客文章', description:'阅读套餐决策、网络知识与使用场景分析，用清楚的概念、具体案例和来源理解每一次选择。', label:'JOURNAL'},
   glossary: {name:'知识百科', description:'读懂订阅、倍率、延迟与分流，少一点术语，多一点理解。', label:'GLOSSARY'}
 };
 export const topics = [

@@ -19,6 +19,7 @@ jobs:
       - run: npm test
       - run: npm run build
       - run: npm run audit
+      - run: npm run audit:collection
       - uses: actions/upload-artifact@v7.0.2
         with:
           name: static-site

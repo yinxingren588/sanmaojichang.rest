@@ -1,8 +1,8 @@
 {
   "status": "PASS",
-  "checkedAt": "2026-10-19T11:38:44.926Z",
+  "checkedAt": "2026-10-20T02:32:11.011Z",
   "errors": [],
-  "articles": 15,
+  "articles": 235,
   "brands": 29,
   "brandData": "逐项需人工复核",
   "scope": "结构、重复与证据字段检查；自动化不能证明来源真实性，需维护者人工核验"

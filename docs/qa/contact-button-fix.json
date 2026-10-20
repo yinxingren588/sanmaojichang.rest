@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "checkedAt": "2026-10-20T02:15:11.189Z",
+  "checks": [
+    "GitHub feedback label visible in normal and hover states",
+    "Feedback URL unchanged",
+    "Mobile layout and article button color"
+  ],
+  "errors": []
+}

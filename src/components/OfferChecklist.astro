@@ -1,0 +1,22 @@
+---
+import type { Airport } from '../data/airports';
+interface Props { airport: Airport }
+const { airport:a }=Astro.props;
+const offer=a.referenceOffer;
+const billing=offer?.priceKind==='monthly'?'参考摘要标为月付':offer?.priceKind==='annual-equivalent'?'参考摘要为年付折算月均':offer?.priceKind==='yearly'?'参考摘要标为年付':'付款周期待确认';
+const period=/\/月|每月/.test(offer?.trafficText||'')?'摘要标为月流量，具体重置日待确认':/\/年|每年/.test(offer?.trafficText||'')?'摘要标为年流量，发放方式待确认':'流量有效期与重置周期待确认';
+const fields=[['付款方式',billing],['流量发放',period],['节点倍率','按实际使用节点确认扣费倍率'],['设备限制',a.deviceLimit||'同时在线设备数与共享条件待确认'],['优惠条件',a.coupon?`已收录 ${a.coupon.code}，适用套餐与续费条件待确认`:'暂未提供优惠码，活动以结算页为准']];
+---
+<section class="offer-checklist" aria-labelledby="offer-checklist-title">
+  <h3 id="offer-checklist-title">下单前，把这五项核对清楚</h3>
+  <p>参考价格用于初步筛选。确认对应套餐的完整条件，再决定是否适合自己的用量。</p>
+  <dl>{fields.map(([label,value])=><div><dt>{label}</dt><dd>{value}</dd></div>)}</dl>
+  <a href="/blog/trial-checklist/">带着试用检查表验证实际任务 →</a>
+</section>
+<style>
+  .offer-checklist{border:1px solid #ccddec;border-radius:12px;padding:22px;margin:24px 0;background:#f3f8fd}
+  .offer-checklist h3{font-size:18px;margin:0 0 8px}.offer-checklist p{font-size:13px}.offer-checklist dl{display:block;margin:0}
+  .offer-checklist dl>div{display:grid;grid-template-columns:88px minmax(0,1fr);gap:12px;padding:11px 0;border-top:1px solid #dce6ef}
+  .offer-checklist dt{color:#486783;font-size:12px}.offer-checklist dd{font-size:13px;overflow-wrap:anywhere}.offer-checklist>a{display:inline-block;margin-top:12px;font-size:12px}
+  @media(max-width:600px){.offer-checklist{padding:17px}.offer-checklist dl>div{grid-template-columns:68px minmax(0,1fr);gap:8px}}
+</style>

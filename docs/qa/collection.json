@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "checkedAt": "2026-10-20T02:32:16.915Z",
+  "errors": [],
+  "counts": {
+    "guides": 30,
+    "blog": 200,
+    "glossary": 5
+  },
+  "total": 235,
+  "minExpandedCharacters": 747,
+  "repeatedLongParagraphs": 0,
+  "scope": "篇数、标题路径、章节、内链、来源字段、占位符与重复长段落；不等同逐条事实审定或软件实机验证"
+}

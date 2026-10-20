@@ -36,4 +36,4 @@ export function displayPrice(airport: Airport) {
 export function displayTraffic(a: Airport) { const p=entryPlan(a); return p?`${p.trafficGB} ${p.trafficUnit} / 月`:a.referenceOffer?.trafficText||unknown; }
 export function displayRoute(a: Airport) { return a.routeType||a.referenceOffer?.routeText||unknown; }
 export function displayProtocols(a: Airport) { return a.protocols.join('、')||a.referenceOffer?.protocolText||unknown; }
-export function evidenceLabel(a: Airport) { return a.testStatus==='tested'?'有测试记录':a.testStatus==='official-data'?'官方资料整理':a.referenceOffer?'第三方参考资料':'资料待核验'; }
+export function evidenceLabel(a: Airport) { return a.testStatus==='tested'?'有测试记录':a.testStatus==='official-data'?'官方资料整理':a.referenceOffer?.sourceKind==='user'?'维护者提供资料':a.referenceOffer?'第三方参考资料':'资料待核验'; }

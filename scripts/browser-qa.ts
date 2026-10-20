@@ -11,16 +11,18 @@ const page=await browser.newPage({viewport:{width:1440,height:1000},deviceScaleF
 const consoleErrors:string[]=[];page.on('pageerror',e=>consoleErrors.push(e.message));
 try{
   const all=await pages();
+  const contentSample=process.env.QA_SAMPLE==='content';
+  const targets=contentSample?all.filter(p=>['/','/guides/','/blog/','/glossary/','/search/','/guides/download-integrity/','/guides/curl-explicit-proxy/','/blog/buy-annual-equivalent/','/blog/net-dns-a-aaaa/','/blog/use-audio-before-video/','/airport/invisible/','/compare/'].includes(p.url)):all;
   for(const width of [320,390,768,1440]){
     await page.setViewportSize({width,height:1000});
-    for(const p of all){
+    for(const p of targets){
       const response=await page.goto(base+(p.url==='/404/'?'/missing-page-qa/':p.url),{waitUntil:'load'});
       if(response?.status()!==(p.url==='/404/'?404:200))errors.push(`${p.url} HTTP ${response?.status()}`);
       const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth+1);
       if(overflow)errors.push(`${p.url} ${width}px 页面横向溢出`);
     }
   }
-  checks.push(`${all.length} 页面 × 4 种视口，无整页横向溢出；404 返回正确状态`);
+  checks.push(`${targets.length} ${contentSample?'代表页面':'全部页面'} × 4 种视口，无整页横向溢出${contentSample?'':'；404 返回正确状态'}`);
   await page.setViewportSize({width:390,height:844});await page.goto(base);
   await page.getByLabel('展开导航').click();
   if(!await page.getByRole('navigation',{name:'移动端导航'}).isVisible())errors.push('移动导航不可见');
@@ -30,12 +32,28 @@ try{
   await page.goto(base+'/airport/invisible/');await page.getByRole('navigation',{name:'本文目录'}).getByRole('link',{name:'预算与流量',exact:true}).click();if(!page.url().endsWith('#analysis')||await page.locator('#analysis').evaluate(e=>e.getBoundingClientRect().top)<65)errors.push('品牌正文目录锚点或顶部遮挡异常');
   await page.locator('.profile-faq summary').first().click();if(await page.locator('.profile-faq details').first().getAttribute('open')===null)errors.push('品牌常见问题未展开');
   await page.getByRole('link',{name:'与相关品牌对比',exact:true}).click();if(await page.locator('#compare-chips button').count()!==2)errors.push('品牌详情双候选对比失败');else checks.push('新品牌详情：正文目录、FAQ 与相近方案双候选对比');
-  await page.goto(base+'/search/');await page.getByLabel('搜索内容',{exact:true}).fill('Windows');if(await page.locator('.search-list li:visible').count()!==1)errors.push('搜索 Windows 筛选数量异常');
+  await page.goto(base+'/search/');const searchTotal=await page.locator('.search-list li').count();await page.getByLabel('搜索内容',{exact:true}).fill('Windows');if(await page.locator('.search-list li:visible').count()<1)errors.push('搜索 Windows 筛选数量异常');
   await page.getByLabel('搜索内容',{exact:true}).fill('no-such-text-qa');if(await page.locator('.search-list li:visible').count()!==0)errors.push('搜索空状态异常');
-  await page.getByLabel('搜索内容',{exact:true}).fill('');if(await page.locator('.search-list li:visible').count()!==45)errors.push('搜索清空后恢复异常');else checks.push('45 条文章、品牌与优惠码搜索筛选');
+  await page.getByLabel('搜索内容',{exact:true}).fill('');if(await page.locator('.search-list li:visible').count()!==searchTotal)errors.push('搜索清空后恢复异常');else checks.push(`${searchTotal} 条文章、品牌与优惠码搜索筛选`);
   await page.getByLabel('搜索内容',{exact:true}).fill('yxr888');if(await page.locator('.search-list li:visible').count()!==1)errors.push('优惠码搜索失败');
   await page.goto(base+'/compare/?brands=flycat,firefly');if(await page.locator('#compare-chips button').count()!==2||!await page.locator('#compare-output').isVisible()||!(await page.locator('#compare-output').innerText()).includes('年付折算'))errors.push('真实品牌比较或年付说明缺失');else checks.push('真实品牌 URL 预选、参考流量与年付折算说明');
   await page.goto(base+'/airport/');await page.getByLabel('查找品牌或优惠码').fill('weifeng90');if(await page.locator('.airport-card:visible').count()!==1)errors.push('品牌目录筛选失败');
+  await page.goto(base+'/blog/');if(await page.locator('[data-directory-item]').count()!==200||await page.locator('[data-directory-item]:visible').count()!==12)errors.push('博客目录数量或分页异常');
+  const firstArticle=await page.locator('[data-directory-item]:visible a').first().getAttribute('href');await page.getByRole('button',{name:'下一页',exact:true}).click();if(await page.locator('[data-directory-item]:visible a').first().getAttribute('href')===firstArticle)errors.push('博客下一页未切换');
+  await page.locator('[data-directory-category="网络知识"]').click();await page.getByLabel('查找文章',{exact:true}).fill('AAAA');if(await page.locator('[data-directory-item]:visible').count()<1)errors.push('博客专题与关键词组合筛选失败');
+  await page.goto(base+'/guides/');if(await page.locator('[data-directory-item]').count()!==30)errors.push('教程目录未显示30篇');await page.locator('[data-directory-category="Windows"]').click();if(await page.locator('[data-directory-item]:visible').count()<1)errors.push('教程系统分类失败');else checks.push('30 篇教程、200 篇博客的专题/关键词筛选与分页');
+  await page.goto(base+'/blog/net-dns-a-aaaa/');
+  await page.getByRole('navigation',{name:'文章快捷导航'}).getByRole('link',{name:/网络知识/}).click();
+  if(await page.locator('[data-directory-category="网络知识"]').getAttribute('aria-pressed')!=='true')errors.push('文章专题链接未应用筛选');
+  await page.getByRole('button',{name:'下一页',exact:true}).click();
+  const savedDirectory=page.url(),savedCard=await page.locator('[data-directory-item]:visible a').first().getAttribute('href');
+  await page.locator('[data-directory-item]:visible a').first().click();await page.goBack();
+  if(page.url()!==savedDirectory||await page.locator('[data-directory-item]:visible a').first().getAttribute('href')!==savedCard)errors.push('返回目录未恢复专题与页码');
+  await page.getByLabel('查找文章',{exact:true}).fill('DNS');await page.reload();
+  if(await page.getByLabel('查找文章',{exact:true}).inputValue()!=='DNS'||await page.locator('[data-directory-item]:visible').count()<1)errors.push('目录刷新未恢复关键词');
+  await page.goto(base+'/blog/net-dns-a-aaaa/');const readingUrl=page.url();
+  await page.locator('.reading-sequence a[rel="next"]').click();await page.locator('.reading-sequence a[rel="prev"]').click();
+  if(page.url()!==readingUrl)errors.push('上一篇下一篇连续阅读未返回原文章');else checks.push('文章专题深链、目录返回/刷新状态、上一篇下一篇互相跳转');
   const couponContext=await browser.newContext();await couponContext.addInitScript("Object.defineProperty(navigator,'clipboard',{value:{writeText:async function(text){window.qaCopied=text;}}});");const couponPage=await couponContext.newPage();await couponPage.goto(base+'/coupons/');await couponPage.getByRole('button',{name:'复制U1S1（有一说一）优惠码',exact:true}).click();if(await couponPage.evaluate(()=>(window as unknown as {qaCopied:string}).qaCopied)!=='U1S1')errors.push('优惠码大小写或复制失败');await couponContext.close();checks.push('优惠码复制通过浏览器隔离剪贴板验证，不修改系统剪贴板');
   // Isolated response fixture only: no synthetic brand is saved to production files.
   const data:Airport[]=Array.from({length:5},(_,i)=>({id:`fixture-${i}`,name:`TEST_${i}`,slug:`fixture-${i}`,description:'仅自动测试',testStatus:'official-data',lastVerified:'2026-10-19',sources:['https://example.test/'],plans:[{id:'p',name:'p',price:20+i,currency:'CNY',billing:'monthly',trafficGB:100,trafficUnit:'GB',trafficPeriod:'month',multiplier:2,verified:true,available:true,source:'https://example.test/',verifiedAt:'2026-10-19'}],protocols:[],regions:[],advantages:[],disadvantages:[],suitableFor:[],categories:[]}));
@@ -60,6 +78,10 @@ try{
   await page.goto(base+'/airport/invisible/');await page.screenshot({path:'docs/qa/screenshots/brand-editorial-mobile.png',fullPage:true});
   await page.setViewportSize({width:1440,height:1080});await page.goto(base+'/airport/invisible/');await page.screenshot({path:'docs/qa/screenshots/brand-editorial-desktop.png'});
   await page.locator('#verdict').scrollIntoViewIfNeeded();await page.screenshot({path:'docs/qa/screenshots/brand-editorial-reading.png'});
+  await page.goto(base+'/blog/');await page.screenshot({path:'docs/qa/screenshots/blog-library-desktop.png'});
+  await page.setViewportSize({width:390,height:844});await page.goto(base+'/guides/');await page.screenshot({path:'docs/qa/screenshots/guides-library-mobile.png'});
+  await page.goto(base+'/blog/net-dns-a-aaaa/#continue-reading');await page.locator('#continue-reading').scrollIntoViewIfNeeded();await page.screenshot({path:'docs/qa/screenshots/reading-navigation-mobile.png'});
+  await page.setViewportSize({width:1440,height:1080});await page.goto(base+'/blog/net-dns-a-aaaa/#continue-reading');await page.locator('#continue-reading').scrollIntoViewIfNeeded();await page.screenshot({path:'docs/qa/screenshots/reading-navigation-desktop.png'});
 }catch(e){errors.push(String(e));}finally{await browser.close();}
 errors.push(...consoleErrors.map(e=>'浏览器脚本错误：'+e));
-await result('browser',errors,{checks,viewports:[320,390,768,1440],browser:'Installed Google Chrome, Playwright headless',scope:'本地生产构建全部页面；29 个真实录入品牌；计算和四家上限另用隔离响应夹具'});
+await result('browser',errors,{checks,viewports:[320,390,768,1440],browser:'Installed Google Chrome, Playwright headless',scope:process.env.QA_SAMPLE==='content'?'内容扩充代表页面抽查；全部生成页另做静态SEO/内链审计；目录搜索与分页、品牌比较另验证':'本地生产构建全部页面；29 个真实录入品牌；计算和四家上限另用隔离响应夹具'});

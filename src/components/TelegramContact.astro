@@ -1,0 +1,24 @@
+---
+import { SITE } from '../data/site';
+---
+<section class="telegram-contact" aria-label="Telegram 联系方式">
+  <span class="telegram-kicker">GET IN TOUCH / 联系我们</span>
+  <h2>联系站点维护者</h2>
+  <p>文章纠错、品牌资料补充或合作沟通，欢迎通过 Telegram 联系。</p>
+  <a class="telegram-link" href={SITE.telegram.url} target="_blank" rel="noopener noreferrer" aria-label={`通过 Telegram 联系 ${SITE.telegram.handle}`}>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21 3-6.5 18-4-7.5L3 9.5 21 3Z"/><path d="m10.5 13.5 5-5"/></svg>
+    <span><small>Telegram</small><strong>{SITE.telegram.handle}</strong></span><span aria-hidden="true">↗</span>
+  </a>
+</section>
+<style>
+  .telegram-contact{padding:26px 28px;border:1px solid #c9deef;background:linear-gradient(120deg,#edf6ff,#f8fbff);border-radius:14px;margin:30px 0}
+  .telegram-kicker{font-size:10px;letter-spacing:.1em;font-weight:700;color:#2b67a8}
+  .telegram-contact h2{font-size:23px;margin:12px 0 10px}
+  .telegram-contact p{font-size:14px;margin-bottom:20px}
+  .telegram-contact .telegram-link{display:inline-flex;align-items:center;gap:14px;min-height:65px;max-width:100%;border-radius:10px;background:#1557e6;color:#fff;text-decoration:none;padding:13px 19px;box-shadow:0 5px 15px #1557e61a}
+  .telegram-link small{display:block;font-size:10px;letter-spacing:.08em;opacity:.85;line-height:1.5}
+  .telegram-contact .telegram-link strong{display:block;font-size:17px;font-weight:650;letter-spacing:0;overflow-wrap:anywhere;color:#fff}
+  .telegram-link>span:last-child{margin-left:16px}
+  .telegram-contact .telegram-link:hover{background:#1047c1;color:#fff}
+  @media(max-width:600px){.telegram-contact{padding:21px 18px}.telegram-contact h2{font-size:21px}.telegram-contact p{font-size:13px}.telegram-contact .telegram-link{padding:12px 14px;gap:10px}.telegram-link strong{font-size:15px}.telegram-link>span:last-child{margin-left:5px}}
+</style>

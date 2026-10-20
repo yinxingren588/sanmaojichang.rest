@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Coupon from '../../components/Coupon.astro';
+import OfferChecklist from '../../components/OfferChecklist.astro';
 import { airports } from '../../data/airports';
 import { getBrandEditorial } from '../../data/brand-editorials';
 import { SITE } from '../../data/site';
@@ -13,7 +14,7 @@ const e=getBrandEditorial(a.id);
 const updated='2026-10-19';
 const related=e.alternatives.map(item=>({brand:airports.find(b=>b.id===item.id)!,reason:item.reason}));
 const compareUrl=`/compare/?brands=${[a.id,...related.slice(0,1).map(item=>item.brand.id)].join(',')}`;
-const payment=a.referenceOffer?.priceKind==='annual-equivalent'?'年付折算月均，先确认实际年费':a.referenceOffer?.priceKind==='yearly'?'按年起价，先确认年度订单':a.referenceOffer?'月度起价，需核对具体付款档位':'待取得套餐原文';
+const payment=a.referenceOffer?.priceKind==='annual-equivalent'?'年付折算月均，先确认实际年费':a.referenceOffer?.priceKind==='yearly'?'按年起价，先确认年度订单':a.referenceOffer?.priceKind==='unspecified'?'付款周期待补充':a.referenceOffer?'月度起价，需核对具体付款档位':'待取得套餐原文';
 const readingMinutes=Math.max(3,Math.ceil(JSON.stringify(e).length/650));
 const protocolLinks=[];
 if(a.referenceOffer?.protocolText.includes('VLESS'))protocolLinks.push({name:'Project X：VLESS 配置说明',url:'https://xtls.github.io/config/outbounds/vless.html'});
@@ -29,7 +30,7 @@ const schema=[{'@context':'https://schema.org','@type':'Article',headline:e.head
     <p class="brand-standfirst">{e.standfirst}</p>
     <div class="brand-byline"><span>三毛导航 · 编辑分析</span><span>更新 <time datetime={updated}>{updated}</time></span><span>约 {readingMinutes} 分钟阅读</span><a href="#sources">资料来源与范围 ↗</a></div>
     <dl class="profile-keyfacts"><div><dt>参考起价</dt><dd>{displayPrice(a)}</dd></div><div><dt>参考流量</dt><dd>{displayTraffic(a)}</dd></div><div><dt>付款提示</dt><dd class="payment-hint">{payment}</dd></div></dl>
-    <p class="profile-evidence-line">{a.referenceOffer?`参数引自第三方参考资料，采集于 ${a.referenceOffer.collectedAt}；正文为编辑分析，当前售卖条件以服务商页面为准。`:'当前保留维护者提供的品牌入口，尚未取得可引用的套餐原文。'}</p>
+    <p class="profile-evidence-line">{a.referenceOffer?.sourceKind==='user'?`参考价格与流量由维护者提供于 ${a.referenceOffer.collectedAt}；付款周期与流量重置规则待补充，当前条件以服务商页面为准。`:a.referenceOffer?`参数引自第三方参考资料，采集于 ${a.referenceOffer.collectedAt}；正文为编辑分析，当前售卖条件以服务商页面为准。`:'当前保留维护者提供的品牌入口，尚未取得可引用的套餐原文。'}</p>
     <div class="profile-hero-actions">{a.affiliateUrl&&<a class="button" href={a.affiliateUrl} target="_blank" rel="sponsored noopener noreferrer">访问品牌（推广）↗</a>}<a class="button secondary" href={compareUrl}>与相关品牌对比</a></div>
   </header>
 
@@ -38,7 +39,7 @@ const schema=[{'@context':'https://schema.org','@type':'Article',headline:e.head
       <section class="editor-verdict" id="verdict" aria-labelledby="verdict-title"><span class="eyebrow">EDITOR'S TAKE</span><h2 id="verdict-title">先看编辑结论</h2><p>{e.verdict}</p><ul>{e.highlights.map(point=><li>{point}</li>)}</ul></section>
       <nav class="profile-contents" aria-label="本文目录"><span>阅读目录</span><a href="#overview">品牌与参数</a><a href="#analysis">预算与流量</a><a href="#connection">线路与客户端</a><a href="#fit">选购建议</a><a href="#coupon">优惠与入口</a><a href="#faq">常见问题</a><a href="#alternatives">相关比较</a></nav>
 
-      <section id="overview"><span class="profile-section-number">01 / BRAND OVERVIEW</span><h2>怎样理解{a.name}的产品信息</h2><p>{e.intro}</p><div class="profile-fact-panel"><h3>已收录的套餐参考摘要</h3><dl class="reference-facts"><dt>参考价格</dt><dd>{displayPrice(a)}</dd><dt>参考配额</dt><dd>{displayTraffic(a)}</dd><dt>线路描述</dt><dd>{displayRoute(a)}</dd><dt>协议 / 软件</dt><dd>{displayProtocols(a)}</dd><dt>计费提示</dt><dd>{payment}</dd></dl><p class="profile-small-note">起价、流量与线路来自摘要字段，具体档位的对应关系需在套餐页确认。来源未提供完整套餐表与倍率，暂不计算每 GB 成本。</p></div></section>
+      <section id="overview"><span class="profile-section-number">01 / BRAND OVERVIEW</span><h2>怎样理解{a.name}的产品信息</h2><p>{e.intro}</p><div class="profile-fact-panel"><h3>已收录的套餐参考摘要</h3><dl class="reference-facts"><dt>参考价格</dt><dd>{displayPrice(a)}</dd><dt>参考配额</dt><dd>{displayTraffic(a)}</dd><dt>线路描述</dt><dd>{displayRoute(a)}</dd><dt>协议 / 软件</dt><dd>{displayProtocols(a)}</dd><dt>计费提示</dt><dd>{payment}</dd></dl><p class="profile-small-note">起价、流量与线路来自摘要字段，具体档位的对应关系需在套餐页确认。来源未提供完整套餐表与倍率，暂不计算每 GB 成本。</p></div><OfferChecklist airport={a}/></section>
 
       <section id="analysis"><span class="profile-section-number">02 / PRICE & ALLOWANCE</span><h2>预算与流量：把摘要放回实际使用</h2><h3>{e.pricing.heading}</h3><p>{e.pricing.text}</p><h3>{e.traffic.heading}</h3><p>{e.traffic.text}</p><p class="profile-reading-link">延伸阅读：<a href="/blog/budget-checklist/">怎样建立套餐预算</a> · <a href="/blog/cost-per-gb/">流量、倍率与计费周期的计算方法</a></p></section>
 
@@ -52,10 +53,10 @@ const schema=[{'@context':'https://schema.org','@type':'Article',headline:e.head
 
       <section id="alternatives"><span class="profile-section-number">07 / COMPARE WITH CONTEXT</span><h2>把相近方案放在一起看</h2><p>以下按预算、配额或使用条件选取比较对象，说明具体比较理由，展示顺序不代表排名。</p><div class="profile-alternatives">{related.map(({brand:b,reason})=><article><h3><a href={`/airport/${b.slug}/`}>{b.name}</a></h3><p class="profile-alt-facts">{displayPrice(b)}<br/>{displayTraffic(b)}</p><p>{reason}</p><a href={`/compare/?brands=${a.id},${b.id}`}>与{a.name}对照 →</a></article>)}</div></section>
 
-      <footer class="profile-sources" id="sources"><h2>资料来源与编辑说明</h2><p>本文由三毛导航整理与分析。品牌名称、推广入口和优惠码由维护者提供；价格、流量与线路信息引用下列来源。采集日期与文章更新日期分别标注，不代表官网核验或本站实测。</p><ul>{a.referenceOffer?<li><a href={a.referenceOffer.source} target="_blank" rel="noopener noreferrer">参考站：{a.name}资料 ↗</a> · 采集于 {a.referenceOffer.collectedAt}</li>:<li>套餐原文待补充，当前不引用其他品牌的报价或配额。</li>}{protocolLinks.map(link=><li><a href={link.url} target="_blank" rel="noopener noreferrer">{link.name} ↗</a> · 配置文档</li>)}</ul><p>本页含推广链接，通过链接注册或购买可能产生佣金。商业关系不决定排名。有关资料更正、当期套餐或优惠条件的补充，请通过<a href="/contact/">联系与纠错</a>提交来源。</p><p><a href="/editorial-policy/">阅读编辑政策 →</a></p></footer>
+      <footer class="profile-sources" id="sources"><h2>资料来源与编辑说明</h2><p>本文由三毛导航整理与分析。品牌名称、推广入口和优惠码由维护者提供；价格、流量与线路信息引用下列来源。采集日期与文章更新日期分别标注，不代表官网核验或本站实测。</p><ul>{a.referenceOffer?.sourceKind==='user'?<li>维护者提供：参考价格 {a.referenceOffer.priceText}、流量 {a.referenceOffer.trafficText} · 提供于 {a.referenceOffer.collectedAt}；付款周期与流量重置规则待补充。</li>:a.referenceOffer?<li><a href={a.referenceOffer.source} target="_blank" rel="noopener noreferrer">参考站：{a.name}资料 ↗</a> · 采集于 {a.referenceOffer.collectedAt}</li>:<li>套餐原文待补充，当前不引用其他品牌的报价或配额。</li>}{protocolLinks.map(link=><li><a href={link.url} target="_blank" rel="noopener noreferrer">{link.name} ↗</a> · 配置文档</li>)}</ul><p>本页含推广链接，通过链接注册或购买可能产生佣金。商业关系不决定排名。有关资料更正、当期套餐或优惠条件的补充，请通过<a href="/contact/">联系与纠错</a>提交来源。</p><p><a href="/editorial-policy/">阅读编辑政策 →</a></p></footer>
     </article>
 
-    <aside class="brand-purchase-box profile-sidebar" aria-label="品牌速览与访问入口"><span class="eyebrow">KEEP IN VIEW</span><h2>{a.name}</h2><p class="profile-sidebar-angle">{e.angle}</p><p class="brand-price">{displayPrice(a)}</p><p>参考流量：{displayTraffic(a)}</p><p class="brand-source-note">{payment}</p>{a.coupon&&<Coupon code={a.coupon.code} name={a.name}/>}<a class="button" href={a.affiliateUrl} rel="sponsored noopener noreferrer" target="_blank">访问品牌（推广）↗</a><a class="profile-sidebar-compare" href={compareUrl}>加入相关品牌对比 →</a><hr/><strong class="profile-sidebar-label">本页判断重点</strong><ul>{e.highlights.map(point=><li>{point}</li>)}</ul><p class="brand-source-note">第三方参数与编辑分析，当前条件请以下单页为准。</p><a href="#sources" class="text-link">查看来源与说明 →</a></aside>
+    <aside class="brand-purchase-box profile-sidebar" aria-label="品牌速览与访问入口"><span class="eyebrow">KEEP IN VIEW</span><h2>{a.name}</h2><p class="profile-sidebar-angle">{e.angle}</p><p class="brand-price">{displayPrice(a)}</p><p>参考流量：{displayTraffic(a)}</p><p class="brand-source-note">{payment}</p>{a.coupon&&<Coupon code={a.coupon.code} name={a.name}/>}<a class="button" href={a.affiliateUrl} rel="sponsored noopener noreferrer" target="_blank">访问品牌（推广）↗</a><a class="profile-sidebar-compare" href={compareUrl}>加入相关品牌对比 →</a><hr/><strong class="profile-sidebar-label">本页判断重点</strong><ul>{e.highlights.map(point=><li>{point}</li>)}</ul><p class="brand-source-note">{a.referenceOffer?.sourceKind==='user'?'维护者提供参数与编辑分析':'第三方参数与编辑分析'}，当前条件请以下单页为准。</p><a href="#sources" class="text-link">查看来源与说明 →</a></aside>
   </div>
 </div>
 </Base>

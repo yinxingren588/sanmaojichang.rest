@@ -15,7 +15,7 @@ for(const a of airports){
 }
 for(const p of built){
   const sentences=p.$('main').text().split(/[。！？\n]/);
-  if(sentences.some(s=>/(亲测推荐|永久解锁|保证排名第一|100%稳定)/.test(s)&&!/(不应|不代表|不保证|不能|不发布|无法|不作|不构成|不使用|禁止|不得)/.test(s)))errors.push(`${p.url} 存在需要人工复核的强承诺`);
+  if(sentences.some(s=>/(亲测推荐|永久解锁|保证排名第一|100%稳定)/.test(s)&&!/(不应|不要|不代表|不保证|不能|不发布|无法|不作|不构成|不使用|禁止|不得)/.test(s)))errors.push(`${p.url} 存在需要人工复核的强承诺`);
 }
 await result('content',errors,{articles:articles.length,brands:airports.length,brandData:airports.length?'逐项需人工复核':'按用户要求保持空白，无样例品牌',scope:'结构、重复与证据字段检查；自动化不能证明来源真实性，需维护者人工核验'});
 

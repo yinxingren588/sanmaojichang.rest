@@ -91,4 +91,8 @@ HTTP 200 表示已接收，202 表示接收且 Key 校验待完成，均不代�
 
 ## 本次品牌内容更新
 
-新增 29 个品牌详情页及 /coupons/；构建后 Sitemap 按实际 robots 生成。大佬云详情因没有报价来源维持 noindex；无合格套餐的榜单不发布排名。推广链接使用 sponsored，优惠码条件待核实。部署前按最新 docs/final-audit.md 复核结果，不沿用早期空数据库的验收范围。
+新增 29 个品牌详情页及 /coupons/；构建后 Sitemap 按实际 robots 生成。大佬云已补入维护者提供的价格与流量，付款周期仍待补充；无合格套餐的榜单不发布排名。推广链接使用 sponsored，优惠码条件待核实。部署前按最新 docs/final-audit.md 复核结果，不沿用早期空数据库的验收范围。
+
+## 验证这次部署是不是最新版本
+
+构建会生成公开的 release.json 内容指纹。Pages 完成部署后，设置 DEPLOY_URL 为你的 HTTPS pages.dev 项目地址或正式域名，运行 npm run verify:live。它会核对内容指纹、联系方式、Canonical、robots、Sitemap 与真实 404 响应。只有正式域名部署核验通过，再执行 IndexNow 正式提交；Bing 站点验证仍需账户中的验证值。不要把账户密码或 Cloudflare API Token 写进网页配置。

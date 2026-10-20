@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "checkedAt": "2026-10-19T12:21:15.778Z",
+  "articles": 235,
+  "checks": [
+    "All 235 article pages have reading navigation and related links",
+    "Previous and next links are reciprocal",
+    "No article recommends itself"
+  ],
+  "errors": []
+}

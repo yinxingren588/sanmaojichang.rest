@@ -8,7 +8,7 @@ interface Crumb { name: string; url: string }
 interface Props { title: string; description: string; noindex?: boolean; crumbs?: Crumb[]; schema?: Record<string,unknown>[]; type?: string; }
 const { title, description, noindex = false, crumbs = [], schema = [], type = 'website' } = Astro.props;
 const canonical = new URL(Astro.url.pathname, SITE.domain).href;
-const navigation = [['/','首页'],['/recommend/','机场推荐'],['/ranking/','机场排行'],['/coupons/','优惠码'],['/compare/','机场对比'],['/guides/','使用教程'],['/blog/','博客文章']];
+const navigation = [['/','首页'],['/recommend/','机场推荐'],['/ranking/','机场排行'],['/coupons/','优惠码'],['/compare/','机场对比'],['/guides/','使用教程'],['/blog/','博客文章'],['/about/','关于我们']];
 const structured: Record<string,unknown>[] = [
   {'@context':'https://schema.org','@type':'Organization','@id':`${SITE.domain}/#organization`,name:SITE.name,url:SITE.domain},
   {'@context':'https://schema.org','@type':'WebSite','@id':`${SITE.domain}/#website`,name:SITE.name,url:SITE.domain,inLanguage:'zh-CN'},
@@ -38,6 +38,9 @@ const structured: Record<string,unknown>[] = [
 <script>
 import '../scripts/coupons';
 const motionToggle = document.querySelector<HTMLButtonElement>('#scenery-motion-toggle');
+const setPageVisibility=()=>{document.documentElement.dataset.pageVisible=String(!document.hidden);};
+setPageVisibility();
+document.addEventListener('visibilitychange',setPageVisibility);
 if (motionToggle) {
   const setMotion = (paused: boolean) => {
     document.documentElement.dataset.skyMotion = paused ? 'paused' : 'playing';

@@ -1,0 +1,38 @@
+{
+  "status": "FAIL",
+  "checkedAt": "2026-10-20T02:32:47.875Z",
+  "errors": [
+    "/release.json: HTTP 404, expected 200",
+    "/release.json: SyntaxError: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON",
+    "线上缺少最新联系方式"
+  ],
+  "origin": "https://sanmaojichang.rest",
+  "expectedContentHash": "28cfb9980fcaa80c9ef1876ca76a5fb7b65f4ea4858a8bc62d4504ab0bdcc0a0",
+  "checks": [
+    {
+      "path": "/release.json",
+      "status": null
+    },
+    {
+      "path": "/",
+      "status": 200
+    },
+    {
+      "path": "/about/",
+      "status": 200
+    },
+    {
+      "path": "/sitemap-index.xml",
+      "status": 200
+    },
+    {
+      "path": "/robots.txt",
+      "status": 200
+    },
+    {
+      "path": "/missing-release-check/",
+      "status": 404
+    }
+  ],
+  "scope": "只验证部署版本、入口、站点地图与404响应；不代表Bing验证或已收录"
+}

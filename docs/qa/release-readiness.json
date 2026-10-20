@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "checkedAt": "2026-10-20T02:33:30.824Z",
+  "checks": [
+    "10 core articles across 4 viewport widths",
+    "Collapsed mobile contents and original flow illustration",
+    "29 brand purchase checklists",
+    "Editorial recommendation label with preserved brand position"
+  ],
+  "errors": []
+}

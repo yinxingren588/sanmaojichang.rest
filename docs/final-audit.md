@@ -1,46 +1,37 @@
-# 最终验收报告
+# 网站验收与上线记录
 
-生成于 2026-10-19T11:45:41.668Z。状态仅代表实际执行结果。
+生成于 2026-10-20T02:34:34.361Z。各项检查独立标明执行日期，旧记录不代表本轮重新验证。
 
-| 检查项 | 状态 | 说明 |
-| --- | --- | --- |
-| build | PASS | 71 页面；63 个进入 Sitemap |
-| types | PASS | 详见原始记录 |
-| unit | PASS | 详见原始记录 |
-| seo | PASS | 详见原始记录 |
-| links | PASS | 详见原始记录 |
-| content | PASS | 详见原始记录 |
-| browser | PASS | 详见原始记录 |
-| background | PASS | 详见原始记录 |
-| lighthouse | PASS | {"home-mobile":{"performance":99,"accessibility":96,"best-practices":100,"seo":100},"home-desktop":{"performance":100,"accessibility":96,"best-practices":100,"seo":100},"article-mobile":{"performance":100,"accessibility":100,"best-practices":100,"seo":100}} |
-| brand-performance | PASS | 详见原始记录 |
-| indexnow-dry-run | PASS | 详见原始记录 |
-| github | PASS | a5c112939fcafb52526b9a9bdb1a8db33290b836 |
-| github-actions | NOT TESTED | 详见原始记录 |
-| Bing 线上验证 / 收录 | NOT TESTED | 尚未连接 Bing Webmaster Tools |
-| 正式域名与 Cloudflare Pages | NOT TESTED | 需要账户部署、域名与 DNS 接入 |
-| IndexNow 正式 HTTP 提交 | NOT TESTED | 仅运行 dry-run，尚未正式提交 |
-| 官网价格与优惠码有效性 | NOT TESTED | 来源为用户资料和第三方参考摘要，非官网核验 |
+| 检查 | 状态 | 执行时间 | 说明 |
+| --- | --- | --- | --- |
+| build | PASS | 2026-10-20T02:31:40.482Z | 291 个页面，284 个可索引 |
+| types | PASS | 2026-10-20T02:34:07.162Z | 详见原始记录 |
+| unit | PASS | 2026-10-20T02:32:34.003Z | 详见原始记录 |
+| seo | PASS | 2026-10-20T02:31:44.275Z | 详见原始记录 |
+| links | PASS | 2026-10-20T02:32:05.609Z | 详见原始记录 |
+| content | PASS | 2026-10-20T02:32:11.011Z | 详见原始记录 |
+| collection | PASS | 2026-10-20T02:32:16.915Z | 详见原始记录 |
+| browser | PASS | 2026-10-20T02:32:22.784Z | 详见原始记录 |
+| release-readiness | PASS | 2026-10-20T02:33:30.824Z | 详见原始记录 |
+| lighthouse | PASS | 2026-10-20T02:33:49.104Z | 详见原始记录 |
+| indexnow-dry-run | PASS | 2026-10-20T02:34:08.199Z | 详见原始记录 |
+| live-deployment | FAIL | 2026-10-20T02:32:47.875Z | /release.json: HTTP 404, expected 200；/release.json: SyntaxError: Unexpected token '<', "<!DOCTYPE "... is not valid JSON；线上缺少最新联系方式 |
+| github | PASS | 2026-10-19T11:45:39.9018428Z | a5c112939fcafb52526b9a9bdb1a8db33290b836 |
+| github-actions | NOT TESTED | 2026-10-19T11:45:40.5220511Z | 详见原始记录 |
 
-## 当前内容与范围
+## 当前内容
 
-- 71 个静态 HTML 页面，63 个进入 Sitemap；15 篇教程、指南与百科正文。
-- 29 个用户提供品牌及完整推广链接，12 个优惠码，28 份第三方参考摘要。
-- 采集来源：https://jichang-tuijian.org/，采集于 2026-10-19；详情来源与原文报价分别保留，见 docs/brand-import.csv。
-- 品牌卡片、29 个品牌详情页、优惠码汇总、目录筛选、站内搜索与 2–4 品牌对比均使用统一数据。
-- 大佬云没有对应参考资料，保留用户入口，价格与流量未知。不以参考站的熊猫cloud 替换。
-- 飞猫、Firefly、快狸保留年付折算说明；部分流量未给周期，不补为月流量。参考站没有完整套餐档位。
-- 参考摘要不进入自动成本计算或排名；无虚构测速、评分、优惠比例与使用期限。
-- 原创动漫天空、海岸与云朵飘动保留，提供暂停与减少动态效果支持。
+- 30 篇使用教程、200 篇博客、5 篇百科；本轮精修 10 篇核心文章，增加操作检查表、计算案例及原创流程示意。
+- 29 个品牌入口、12 个优惠码；28 份第三方摘要，1 份维护者补充价格与流量。大佬云为 ¥19.9、100GB，付款与流量周期未指定。
+- 全部品牌详情增加五项下单核对清单；参考信息不自动升级为已核验套餐。
+- 博客、教程有搜索、专题与分页，文章提供连续阅读和相关推荐。手机目录改为可折叠，长表格和命令在内容块内滚动。
+- 隐形人保留编辑推荐位置，并显示设置原因；不是测速或稳定性第一名。
+- 关于我们与联系页面使用 Telegram @yinxingren_588。动漫背景、飘动云层与暂停按钮保留，页面后台时暂停动画。
 
 ## 验证边界
 
-自动检查验证结构、链接、数据一致性与计算规则，不能证明来源真实性。浏览器验收覆盖实际生产页面、真实品牌筛选与对比；成本计算和四家上限另用隔离响应夹具。优惠码复制通过隔离剪贴板验证，不修改系统剪贴板。Lighthouse 仅代表本机测试，INP 与正式 CDN 体验未测试。
+本地构建、自动审计、单元测试与代表页面浏览器检查不等于 235 篇文章的逐项实机验证。流程图明确是原创示意，不冒充软件界面截图。Lighthouse 为本机一次测量，不代表真实手机、正式 CDN 或 INP。外部价格、优惠码条件与品牌实测仍需独立证据。
 
-## 上线后事项
+## 部署和 Bing
 
-按 docs/deployment.md 完成正式域名、Cloudflare Pages 与 Bing 验证。补充大佬云来源、完整套餐档位与优惠码条件后再更新资料；官方核验及实测需独立证据，不能以采集日期代替。
-
-## 品牌详情编辑升级
-
-29 个品牌分别撰写独立选购分析：各自的编辑结论、预算与流量解读、线路与客户端核对、适用条件与取舍、三项购买重点、FAQ 及带理由的相近方案比较。统一阅读版式含目录、参数摘要与侧栏入口；Article 结构化数据与正文标题、摘要一致。编辑内容不修改原始参考参数、优惠码或核验状态。详见 docs/brand-editorial-notes.md。
+正式域名可访问不等于已部署本轮版本。构建输出 release.json 内容指纹，使用 npm run verify:live 核对线上与本地版本；最新结果见 live-deployment.json。用户已表示创建 Pages 项目，项目地址待提供。Bing 账户验证未完成；没有提交 IndexNow 正式请求或宣称已收录。待正式域名版本验证通过后，再按 docs/deployment.md 完成站点验证、Sitemap 与增量通知。

@@ -30,7 +30,7 @@ export function initCompare(){
       ['每 GB 成本',a=>{const p=entryPlan(a);return p?`${costPerGB(p)!.toFixed(4)} ${p.currency}/GB`:unknown;}],
       ['节点地区',a=>a.regions.join('、')||unknown],['参考协议',a=>displayProtocols(a)],['参考线路',a=>displayRoute(a)],
       ['设备限制',a=>a.deviceLimit||unknown],['AI 支持（资料）',a=>a.aiSupport?.join('、')||unknown],['流媒体支持（资料）',a=>a.streamingSupport?.join('、')||unknown],
-      ['优点',a=>a.advantages.join('；')||unknown],['注意事项',a=>a.disadvantages.join('；')||unknown],['适合人群',a=>a.suitableFor.join('、')||unknown],['优惠码（条件待核实）',a=>a.coupon?.code||'暂未提供'],['第三方资料采集',a=>a.referenceOffer?.collectedAt||unknown],['最后核验',a=>a.lastVerified||unknown]
+      ['优点',a=>a.advantages.join('；')||unknown],['注意事项',a=>a.disadvantages.join('；')||unknown],['适合人群',a=>a.suitableFor.join('、')||unknown],['优惠码（条件待核实）',a=>a.coupon?.code||'暂未提供'],['资料来源',a=>a.referenceOffer?.sourceKind==='user'?'维护者提供':a.referenceOffer?'第三方参考站':unknown],['资料记录日期',a=>a.referenceOffer?.collectedAt||unknown],['最后核验',a=>a.lastVerified||unknown]
     ];
     rows.forEach(([label,fn])=>{const tr=document.createElement('tr');const th=cell('th',label);th.setAttribute('scope','row');tr.append(th);list.forEach(a=>tr.append(cell('td',fn(a))));body.append(tr);});
     const links=document.createElement('tr');links.append(cell('th','来源与资料'));list.forEach(a=>{const td=document.createElement('td'),link=document.createElement('a');link.href=`/airport/${a.slug}/`;link.textContent='查看品牌来源 →';td.append(link);links.append(td);});body.append(links);table.append(body);output.append(table);

@@ -39,6 +39,7 @@ export interface Airport {
     routeText: string;
     protocolText: string;
     priceKind: 'monthly' | 'annual-equivalent' | 'yearly' | 'unspecified';
+    sourceKind?: 'user' | 'third-party';
     source: string;
     collectedAt: string;
   };
@@ -222,10 +223,20 @@ export const airports: Airport[] = [
     "id": "dalaocloud",
     "name": "大佬云",
     "slug": "dalaocloud",
-    "description": "大佬云品牌入口已由站点维护者提供。当前尚未取得可引用的价格、流量与套餐周期资料，页面保留推广入口及待核验项目。",
+    "description": "大佬云参考价格 ¥19.9、流量 100GB，由站点维护者提供。付款周期、流量重置规则与线路资料待补充，当前条件请以下单页为准。",
     "affiliateUrl": "https://vip.dalaocloud.com/#/?code=Cp2sfYZg",
+    "referenceOffer": {
+      "priceText": "¥19.9",
+      "trafficText": "100GB",
+      "routeText": "尚未核实",
+      "protocolText": "尚未核实",
+      "priceKind": "unspecified",
+      "sourceKind": "user",
+      "source": "",
+      "collectedAt": "2026-10-19"
+    },
     "editorialNotes": [
-      "用户提供了品牌推广入口，但指定参考站中没有找到该品牌的价格和流量；暂不使用其他品牌的数据填充。"
+      "维护者补充参考价格 ¥19.9、流量 100GB；未指定付款周期和流量有效期，不将其标注为月付或月流量。"
     ],
     "plans": [],
     "protocols": [],

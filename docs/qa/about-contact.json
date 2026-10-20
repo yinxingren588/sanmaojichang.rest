@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "checkedAt": "2026-10-19T13:41:11.650Z",
+  "checks": [
+    "Desktop and mobile About navigation",
+    "Telegram handle and exact t.me destination",
+    "320,390,900,1024,1280,1440px no page overflow"
+  ],
+  "errors": []
+}

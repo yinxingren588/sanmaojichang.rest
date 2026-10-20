@@ -1,7 +1,7 @@
 ---
 import type {Airport} from '../data/airports';
 import {displayPrice,displayTraffic,displayRoute} from '../lib/airports';
-interface Props { brands: Airport[]; }
-const {brands}=Astro.props;
+interface Props { brands: Airport[]; featuredId?: string; }
+const {brands,featuredId}=Astro.props;
 ---
-<div class="table-scroll" tabindex="0" aria-label="品牌参考价格与流量"><table><caption>第三方参考摘要 · 展示顺序不代表排名</caption><thead><tr><th>品牌</th><th>参考起价</th><th>参考流量</th><th>参考线路</th><th>优惠码</th><th>入口</th></tr></thead><tbody>{brands.map(a=><tr><th scope="row"><a href={`/airport/${a.slug}/`}>{a.name}</a></th><td>{displayPrice(a)}</td><td>{displayTraffic(a)}</td><td>{displayRoute(a)}</td><td>{a.coupon?<code>{a.coupon.code}</code>:'暂未提供'}</td><td><a href={`/airport/${a.slug}/`}>详情</a>{a.affiliateUrl&&<> · <a href={a.affiliateUrl} target="_blank" rel="sponsored noopener noreferrer">访问（推广）↗</a></>}</td></tr>)}</tbody></table></div>
+<div class="table-scroll" tabindex="0" aria-label="品牌参考价格与流量"><table><caption>品牌参考摘要 · 展示顺序不代表排名</caption><thead><tr><th>品牌</th><th>参考起价</th><th>参考流量</th><th>参考线路</th><th>优惠码</th><th>入口</th></tr></thead><tbody>{brands.map(a=><tr><th scope="row"><a href={`/airport/${a.slug}/`}>{a.name}</a>{a.id===featuredId&&<span class="editor-pick">编辑推荐</span>}</th><td>{displayPrice(a)}</td><td>{displayTraffic(a)}</td><td>{displayRoute(a)}</td><td>{a.coupon?<code>{a.coupon.code}</code>:'暂未提供'}</td><td><a href={`/airport/${a.slug}/`}>详情</a>{a.affiliateUrl&&<> · <a href={a.affiliateUrl} target="_blank" rel="sponsored noopener noreferrer">访问（推广）↗</a></>}</td></tr>)}</tbody></table></div>

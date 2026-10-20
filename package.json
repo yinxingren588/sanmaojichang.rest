@@ -13,13 +13,15 @@
     "audit:seo": "tsx scripts/audit-seo.ts",
     "audit:links": "tsx scripts/check-links.ts",
     "audit:content": "tsx scripts/validate-content.ts",
+    "audit:collection": "tsx scripts/audit-collection.ts",
     "audit": "npm run audit:seo && npm run audit:links && npm run audit:content",
     "indexnow": "tsx scripts/indexnow.ts",
     "test:browser": "tsx scripts/browser-qa.ts",
     "report": "tsx scripts/report.ts",
     "verify": "tsx scripts/verify.ts",
     "seo:map": "tsx scripts/keyword-map.ts",
-    "test:performance": "tsx scripts/lighthouse-qa.ts"
+    "test:performance": "tsx scripts/lighthouse-qa.ts",
+    "verify:live": "tsx scripts/verify-live.ts"
   },
   "dependencies": {
     "astro": "7.4.0",

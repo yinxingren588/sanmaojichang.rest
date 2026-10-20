@@ -1,8 +1,8 @@
 {
   "status": "PASS",
-  "checkedAt": "2026-10-19T11:38:43.079Z",
+  "checkedAt": "2026-10-20T02:32:05.609Z",
   "errors": [],
-  "links": 4170,
-  "externalUrls": 84,
+  "links": 20638,
+  "externalUrls": 180,
   "externalCheck": "NOT TESTED：外部站点状态不属于本地内链检查"
 }

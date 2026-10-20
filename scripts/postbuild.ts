@@ -19,6 +19,8 @@ await writeFile('dist/sitemap-0.xml',sitemap);
 await writeFile('dist/sitemap-index.xml',`<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><sitemap><loc>${domain}/sitemap-0.xml</loc></sitemap></sitemapindex>\n`);
 await mkdir('.indexnow',{recursive:true});
 await writeFile('.indexnow/current.json',JSON.stringify(manifest,null,2)+'\n');
+const contentHash=createHash('sha256').update(JSON.stringify(Object.entries(manifest).sort(([a],[b])=>a.localeCompare(b)))).digest('hex');
+await writeFile('dist/release.json',JSON.stringify({version:1,contentHash,pages:built.length,indexable:indexed.length,builtAt:new Date().toISOString()})+'\n');
 await mkdir('docs/qa',{recursive:true});
 await writeFile('docs/qa/build.json',JSON.stringify({status:'PASS',checkedAt:new Date().toISOString(),pages:built.length,indexable:indexed.length,noindex:built.length-indexed.length},null,2)+'\n');
 console.log(`构建完成：${built.length} 个 HTML 页面，${indexed.length} 个进入 Sitemap；IndexNow 未提交。`);

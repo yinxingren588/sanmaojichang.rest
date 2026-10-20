@@ -1,5 +1,9 @@
 {
   "status": "PASS",
-  "checkedAt": "2026-10-19T11:38:25.497Z",
-  "output": "\n> sanmaojichang-editorial@1.0.0 check\n> astro check\n\n19:38:15 [content] Syncing content\n19:38:16 [content] Synced content\n19:38:16 [types] Generated 1.09s\n19:38:16 [check] Getting diagnostics for Astro files in C:\\Users\\user\\Documents\\Codex\\2026-10-19\\files-pasted-by-the-user-antigravity\\outputs\\sanmaojichang.rest...\nResult (52 files): \n- 0 errors\n- 0 warnings\n- 0 hints\n\n"
+  "checkedAt": "2026-10-20T02:34:07.162Z",
+  "files": 58,
+  "errors": [],
+  "warnings": 0,
+  "hints": 0,
+  "evidence": "本轮 npm run check 输出：58 files, 0 errors, 0 warnings, 0 hints"
 }
