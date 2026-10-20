@@ -1,6 +1,6 @@
 # 网站验收与上线记录
 
-生成于 2026-10-20T02:34:34.361Z。各项检查独立标明执行日期，旧记录不代表本轮重新验证。
+生成于 2026-10-20T02:39:19.203Z。各项检查独立标明执行日期，旧记录不代表本轮重新验证。
 
 | 检查 | 状态 | 执行时间 | 说明 |
 | --- | --- | --- | --- |
@@ -15,9 +15,12 @@
 | release-readiness | PASS | 2026-10-20T02:33:30.824Z | 详见原始记录 |
 | lighthouse | PASS | 2026-10-20T02:33:49.104Z | 详见原始记录 |
 | indexnow-dry-run | PASS | 2026-10-20T02:34:08.199Z | 详见原始记录 |
-| live-deployment | FAIL | 2026-10-20T02:32:47.875Z | /release.json: HTTP 404, expected 200；/release.json: SyntaxError: Unexpected token '<', "<!DOCTYPE "... is not valid JSON；线上缺少最新联系方式 |
-| github | PASS | 2026-10-19T11:45:39.9018428Z | a5c112939fcafb52526b9a9bdb1a8db33290b836 |
-| github-actions | NOT TESTED | 2026-10-19T11:45:40.5220511Z | 详见原始记录 |
+| live-deployment | PASS | 2026-10-20T02:36:37.097Z | 详见原始记录 |
+| cloudflare-deployment | PASS | 2026-10-20T02:36:56.173Z | 详见原始记录 |
+| indexnow-http | PASS | 2026-10-20T02:37:47.507Z | 详见原始记录 |
+| bing-verification | NOT TESTED | 2026-10-20T02:39:17.576Z | 详见原始记录 |
+| github | PASS | 2026-10-20T02:35:53.035Z | df1fdc5211ce915e2fe6b15c312a83382635768c |
+| github-actions | PASS | 2026-10-20T02:36:34.827Z | 详见原始记录 |
 
 ## 当前内容
 
@@ -34,4 +37,4 @@
 
 ## 部署和 Bing
 
-正式域名可访问不等于已部署本轮版本。构建输出 release.json 内容指纹，使用 npm run verify:live 核对线上与本地版本；最新结果见 live-deployment.json。用户已表示创建 Pages 项目，项目地址待提供。Bing 账户验证未完成；没有提交 IndexNow 正式请求或宣称已收录。待正式域名版本验证通过后，再按 docs/deployment.md 完成站点验证、Sitemap 与增量通知。
+正式域名可访问不等于已部署本轮版本。构建输出 release.json 内容指纹，使用 npm run verify:live 核对线上与本地版本；最新结果见 live-deployment.json。GitHub 源码和 Cloudflare 正式发布已成功，正式版本指纹一致。IndexNow 已接收 284 个网址（HTTP 200），不代表已收录。用户确认域名已通过 Bing 验证，但当前登录账户的网站列表没有该域名，Sitemap 后台提交仍需切换到对应账户；站点地图为 https://sanmaojichang.rest/sitemap-index.xml。

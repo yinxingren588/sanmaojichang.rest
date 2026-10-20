@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "checkedAt": "2026-10-20T02:37:47.507Z",
+  "httpStatus": 200,
+  "count": 284,
+  "endpoint": "https://api.indexnow.org/indexnow",
+  "keyFileVerified": true,
+  "initialAttemptHttpStatus": 403,
+  "scope": "首次403后核对验证文件，单页诊断返回200，完整284网址批次随后返回200；表示通知被接收，不代表已收录"
+}

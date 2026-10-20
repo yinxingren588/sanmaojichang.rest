@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "checkedAt": "2026-10-20T02:36:56.173Z",
+  "commit": "df1fdc5211ce915e2fe6b15c312a83382635768c",
+  "project": "sanmaojichang-rest",
+  "previewUrl": "https://ce3e13e3.sanmaojichang-rest.pages.dev",
+  "productionUrl": "https://sanmaojichang.rest",
+  "evidence": "Cloudflare Pages GitHub check completed: success; live-deployment.json confirms content fingerprint, Telegram, Canonical, Sitemap, robots and real 404"
+}

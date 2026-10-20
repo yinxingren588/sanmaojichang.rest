@@ -1,9 +1,8 @@
 {
-  "status": "NOT TESTED",
-  "checkedAt": "2026-10-19T11:45:40.5220511Z",
-  "headSha": "a5c112939fcafb52526b9a9bdb1a8db33290b836",
-  "workflowStatus": "in_progress",
-  "conclusion": null,
-  "url": "https://github.com/yinxingren588/sanmaojichang.rest/actions/runs/39246903715",
-  "scope": "本次品牌编辑升级提交的 GitHub 自动检查；本地构建、审计与浏览器验收已通过"
+  "status": "PASS",
+  "checkedAt": "2026-10-20T02:36:34.827Z",
+  "commit": "df1fdc5211ce915e2fe6b15c312a83382635768c",
+  "url": "https://github.com/yinxingren588/sanmaojichang.rest/actions/runs/39359733763",
+  "evidence": "全部构建步骤、15项单元测试、静态审计与篇数审计成功",
+  "scope": "该源码提交的GitHub Actions远程检查"
 }

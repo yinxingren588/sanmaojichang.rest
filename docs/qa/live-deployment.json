@@ -1,17 +1,13 @@
 {
-  "status": "FAIL",
-  "checkedAt": "2026-10-20T02:32:47.875Z",
-  "errors": [
-    "/release.json: HTTP 404, expected 200",
-    "/release.json: SyntaxError: Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON",
-    "线上缺少最新联系方式"
-  ],
+  "status": "PASS",
+  "checkedAt": "2026-10-20T02:36:37.097Z",
+  "errors": [],
   "origin": "https://sanmaojichang.rest",
   "expectedContentHash": "28cfb9980fcaa80c9ef1876ca76a5fb7b65f4ea4858a8bc62d4504ab0bdcc0a0",
   "checks": [
     {
       "path": "/release.json",
-      "status": null
+      "status": 200
     },
     {
       "path": "/",
